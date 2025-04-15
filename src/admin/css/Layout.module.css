@@ -1,0 +1,58 @@
+.nav {
+	display: flex;
+	width: 100%;
+	height: 8%;
+	min-height: 80px;
+	background-color: #000;
+	gap: 1rem;
+
+	z-index: 2;
+}
+
+.navList {
+	width: auto;
+	gap: 2rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 0;
+	margin-left: 1rem;
+}
+
+.navList > * {
+	list-style: none;
+	padding: 0.5rem 1rem;
+	color: var(--color-orange);
+	text-decoration: none;
+	font-size: 1.6rem;
+	transition: all 0.3s ease-in-out;
+	border-radius: 0.5rem;
+
+	cursor: pointer;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	font-weight: 600;
+}
+
+.navList > *:hover {
+	background: #444;
+}
+.navList > *:active {
+	background: #555;
+}
+
+.wrapper {
+	display: flex;
+	background: #666;
+
+	width: 100%;
+	height: 92%;
+	overflow: hidden;
+
+	z-index: 1;
+
+	transition: all 0.3s ease-in-out;
+}

@@ -1,0 +1,80 @@
+.nav {
+	height: 100%;
+	width: 15%;
+	min-width: 100px;
+
+	background-color: #000;
+	min-width: 200px;
+	z-index: 1;
+
+	padding: 0 .5rem;
+}
+
+.title {
+	color: var(--color-orange);
+	font-size: 2em;
+	font-weight: bold;
+	text-align: center;
+	padding: 10px;
+
+	border-bottom: 0.1rem solid var(--color-orange);
+}
+
+.addButton {
+	width: 100%;
+	height: 5%;
+
+	border: 1px solid;
+	background: transparent;
+	color: var(--color-orange);
+	font-size: 1.2em;
+	outline: none;
+
+	border-radius: 2rem;
+
+	font-weight: bold;
+
+	margin-top: 20px;
+}
+
+.addButton:hover {
+	background: #fda527;
+	color: #000;
+	transition: 0.2s ease-in-out;
+}
+
+.rooms {
+	width: 100%;
+	height: 85%;
+	overflow: auto;
+
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+
+	padding: 0 0 2svh 0;
+}
+.rooms::-webkit-scrollbar {
+	display: none;
+}
+.room {
+	width: 100%;
+	border-radius: 10px;
+	border: 1px solid;
+}
+.roomCode > b {
+	color: #dfdfdf;
+}
+.roomPlayers {
+	color: #cfcfcf;
+}
+.content {
+	width: 85%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 1rem;
+
+	background: #222;
+}

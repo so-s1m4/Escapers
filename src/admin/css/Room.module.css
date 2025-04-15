@@ -1,0 +1,202 @@
+.topBar {
+	width: 100%;
+	height: 5%;
+
+	color: var(--color-orange);
+	font-size: 2rem;
+	font-weight: bold;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.roomStatus {
+	font-size: 2.2rem;
+	font-weight: bold;
+}
+
+.roomId {
+	display: flex;
+	gap: 0.5rem;
+	align-items: flex-end;
+	font-size: 3rem;
+	font-weight: bolder;
+	color: var(--color-orange);
+}
+.middleBar {
+	height: 15%;
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+}
+.roomGame {
+	width: 30%;
+	height: 100%;
+
+	font-size: 3rem;
+	font-weight: bolder;
+	color: var(--color-orange);
+
+}
+.roomInfo {
+	height: 100%;
+	min-width: 20%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-end;
+
+	border: 0.2rem solid var(--color-orange);
+	border-radius: 1rem;
+	padding: 1rem;
+}
+.roomInfoText {
+	color: var(--color-orange);
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+.footer {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+
+	justify-content: flex-end;
+	gap: 1vh;
+
+	overflow: hidden;
+}
+.title {
+	font-size: 2.5rem;
+	font-weight: bold;
+	color: var(--color-orange);
+}
+.addButton {
+	width: 15%;
+	height: 80%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: var(--color-orange);
+	border: 0.15rem solid;
+	border-radius: 3rem;
+	font-size: 1.5rem;
+	font-weight: bold;
+
+	background: transparent;
+	outline: none;
+	transition: all 0.2s ease-in-out;
+
+	cursor: pointer;
+}
+.addButton:active {
+	background: var(--color-orange);
+	color: black;
+}
+.addButton:disabled {
+	display: none;
+}
+
+.closeButton {
+	width: 15%;
+	height: 80%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: var(--color-orange);
+	border: 0.15rem solid;
+	border-radius: 3rem;
+	font-size: 1.5rem;
+	font-weight: bold;
+
+	background: transparent;
+	outline: none;
+	transition: all 0.2s ease-in-out;
+
+	cursor: pointer;
+}
+
+.closeButton:active {
+	background: red;
+	color: black;
+}
+.closeButton:disabled {
+	display: none;
+}
+
+
+
+.playersWrapper {
+	width: 100%;
+	height: 100%;
+
+	position: relative;
+	overflow: auto;
+}
+.playersWrapper::-webkit-scrollbar {
+	display: none;
+}
+
+.playersTable {
+	position: relative;
+	width: 100%;
+	border-collapse: collapse;
+}
+thead,
+thead > tr {
+	position: sticky;
+}
+thead > tr > th {
+	color: var(--color-orange);
+	font-size: 2rem;
+
+	border: 1px solid var(--color-orange);
+}
+tbody > tr > td {
+	color: white;
+	font-size: 1.25rem;
+}
+thead > tr > th,
+tbody > tr > td {
+	border-left: 1px solid var(--color-orange);
+	border-right: 1px solid var(--color-orange);
+	text-align: center;
+}
+
+tbody,
+tr {
+	border-bottom: 1px solid var(--color-orange);
+}
+
+td,
+th {
+	padding: 1rem;
+}
+
+tbody {
+	overflow: auto;
+}
+
+.header {
+	height: 5vh;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	gap: 1rem;
+	
+}
+.buttonsWrapper {
+	width: fit-content;
+	display: flex;
+	gap: 1rem;
+	* {
+		width: fit-content;
+		padding: .5rem 1rem;
+	}
+}
