@@ -1,10 +1,11 @@
 import fetchData from "./fetchData.ts"
+import { Admin, Game, Location } from "./apiController.ts"
 
 class Store {
 	constructor() {
 		this.state = {
 			myInfo:{},
-			rooms:[],
+			myLocations:[],
 		}
 
 		this.listeners = new Set()
@@ -12,19 +13,17 @@ class Store {
 
 
 	async loadInfo() {
-		const myInfo = await fetchData("/admin", "GET").then(res => {
-			if (res.status) {
-				return res.data
-			} else {
-				console.error(res)
-				return null
-			}
-		}).catch(err => {
-			console.error(err)
-		})
+		const [myInfo, myLocations] = await Promise.all([Admin.getMyInfo(), Location.getMyLocations()])
 
+		if (myInfo.success) {
+			this.state.myInfo = myInfo.data
+			this.state.myLocations = myLocations.data
+		} else {
+			localStorage.clear()
+			window.location.reload()
+		}
 
-
+		console.log(this.state)
 		this.listeners.forEach(component => component.loadInfo())
 	}
 
@@ -36,7 +35,7 @@ class Store {
 		this.listeners.delete(component)
 	}
 
-	async setState(newState) {
+	setState(newState) {
 		this.state = { ...this.state, ...newState }
 		this.listeners.forEach(component => component.loadInfo())
 	}

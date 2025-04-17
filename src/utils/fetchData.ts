@@ -1,22 +1,32 @@
-const API_URL = 'http://192.168.31.24:8000/api'
+// src/lib/axios.js
+import axios from 'axios'
 
-export default async function fetchData(
-	endpoint: string,
-	method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
-	payload: object = null
-) {
-	try {
-		const response = await fetch(`${API_URL}${endpoint}`, {
-			method,
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
-			},
-			body: payload ? JSON.stringify(payload) : null,
-		})
+// 1. Базовая конфигурация ────────────────────────────────
+const api = axios.create({
+	baseURL: 'http://localhost:8000/api',
+	timeout: 10_000,
+	headers: { 'Content-Type': 'application/json' },
+	// withCredentials: true,
+})
 
-		return await response.json()
-	} catch (error) {
-		console.error('Error fetching data:', error)
+// 2. Запрос‑интерцептор ──────────────────────────────────
+api.interceptors.request.use(
+	cfg => {
+		const token = localStorage.getItem('token')
+		if (token) cfg.headers.Authorization = `Bearer ${token}`
+
+		return cfg
+	},
+	err => Promise.reject(err)
+)
+
+// 3. Ответ‑интерцептор ───────────────────────────────────
+api.interceptors.response.use(
+	res => res.data,
+	err => {
+		console.error('[API‑error]', err)
+		return Promise.reject(err)
 	}
-}
+)
+
+export default api

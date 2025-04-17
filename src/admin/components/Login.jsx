@@ -1,7 +1,7 @@
 import img from "img/logo.png"
 import img2 from "img/gifka.webp"
 import css from 'admin/css/Login.module.css'
-import { login } from 'utils/apiController.ts'
+import { Admin } from 'utils/apiController.ts'
 
 export default function Login() {
 	const handleSubmit = async e => {
@@ -10,11 +10,8 @@ export default function Login() {
 		const username = form.username.value
 		const password = form.password.value
 
-		await login(username, password)
+		await Admin.login({username, password})
 			.then(res => {
-
-				console.log(res)
-          
 				if (res.success) {
 					localStorage.setItem('token', res.token)
 					window.location.reload()

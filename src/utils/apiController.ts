@@ -1,10 +1,6 @@
 import fetchData from './fetchData.ts'
 
 type adminCreateData = {
-	username: string
-	password: string
-}
-type adminLoginData = {
 	firstName: string
 	lastName: string
 	username: string
@@ -18,52 +14,102 @@ type locationCreateData = {
 	mail: string
 }
 
-// GET FUNCTIONS
-export async function getMyInfo() {
-	return await fetchData('/admin', 'GET').then(res => res.json())
+export class Admin {
+	static async getMyInfo() {
+		return await fetchData.get('/admin').then(res => res)
+	}
+	static async getAdmins() {
+		return await fetchData.get('/admin/list').then(res => res)
+	}
+	static async getAdmin(id: number) {
+		return await fetchData.get(`/admin/${id}`).then(res => res)
+	}
+	static async login(data: { username: string; password: string }) {
+		return await fetchData.post('/admin/login', data).then(res => res)
+	}
+	static async addAdmin(data: adminCreateData) {
+		return await fetchData.post('/admin/register', data).then(res => res)
+	}
+	static async updateAdmin(adminId: number, data: adminCreateData) {
+		return await fetchData.put(`/admin/${adminId}`, data).then(res => res)
+	}
+	static async deleteAdmin(adminId: number) {
+		return await fetchData.delete(`/admin/${adminId}`).then(res => res)
+	}
 }
-export async function getMyLocations() {
-	return await fetchData('/admin/location', 'GET').then(res => res.json())
-}
-export async function getAdmins() {
-	return await fetchData('/admin/list', 'GET').then(res => res.json())
-}
-export async function getAdmin(id: number) {
-	return await fetchData(`/admin/${id}`, 'GET').then(res => res.json())
-}
-export async function getLocations() {
-	return await fetchData('/location/list', 'GET').then(res => res.json())
-}
-export async function getLocation(id: number) {
-	return await fetchData(`/location/${id}`, 'GET').then(res => res.json())
-}
-export async function getAdminLocations(adminId: number) {
-	return await fetchData(`/admin/${adminId}/location`, 'GET').then(res =>
-		res.json()
-	)
-}
+export class Location {
+	static async getMyLocations() {
+		return await fetchData.get('/admin/location').then(res => res)
+	}
+	static async getLocations() {
+		return await fetchData.get('/location/list').then(res => res)
+	}
+	static async getLocation(id: number) {
+		return await fetchData.get(`/location/${id}`).then(res => res)
+	}
+	static async getAdminLocations(adminId: number) {
+		return await fetchData.get(`/admin/${adminId}/location`).then(res => res)
+	}
+	static async addLocation(data: locationCreateData) {
+		return await fetchData.post('/location', data).then(res => res)
+	}
+	static async addAdminToLocation(data: {
+		adminId: number
+		locationId: number
+	}) {
+		return await fetchData
+			.post(`/admin/${data.adminId}/location/${data.locationId}`)
+			.then(res => res)
+	}
 
-// POST FUNCTIONS
-export async function login(data: adminLoginData) {
-	return {success: true, token: '1234567890' }
-	// return await fetchData('/admin/login', 'POST', data).then(res => res.json())
+	static async updateLocation(locationId: number, data: locationCreateData) {
+		return await fetchData.put(`/location/${locationId}`, data).then(res => res)
+	}
+	static async deleteAdminFromLocation(adminId: number, locationId: number) {
+		return await fetchData
+			.delete(`/admin/${adminId}/location/${locationId}`)
+			.then(res => res)
+	}
+	static async deleteLocation(locationId: number) {
+		return await fetchData.delete(`/location/${locationId}`).then(res => res)
+	}
+	static async deleteGameFromLocation(locationId: number, gameId: number) {
+		return await fetchData
+			.delete(`/location/${locationId}/game/${gameId}`)
+			.then(res => res)
+	}
 }
-export async function addAdmin(data: adminCreateData) {}
-export async function addLocation(data: locationCreateData) {}
-export async function addAdminToLocation(data: {
-	adminId: number
-	locationId: number
-}) {}
-
-// PUT FUNCTIONS
-export async function updateAdmin() {}
-export async function updateLocation() {}
-
-// DELETE FUNCTIONS
-
-export async function deleteAdmin() {}
-export async function deleteAdminFromLocation() {}
-export async function deleteLocation() {}
+export class Game {
+	static async getLocationsGames(locationId: number) {
+		return await fetchData.get(`/location/${locationId}/game`).then(res => res)
+	}
+	static async getLocationGameById(locationId: number, gameId: number) {
+		return await fetchData.get(
+			`/location/${locationId}/game/${gameId}`,
+		).then(res => res)
+	}
+	static async addGameToLocation(locationId: number, data: FormData) {
+		return await fetchData.post(`/location/${locationId}/game`, data).then(
+			res => res
+		)
+	}
+	static async updateLocationGame(
+		locationId: number,
+		gameId: number,
+		data: FormData & {
+			name: string
+			icon: File
+			color: string
+			maxPlayers: number
+		}
+	) {
+		return await fetchData.put(
+			`/location/${locationId}/game/${gameId}`,
+			data
+		).then(res => res)
+	}
+}
+export class Rooms {}
 
 // EXAMPLE FUNCTION
-//export async function getMyInfo() {}
+//static async getMyInfo() {}

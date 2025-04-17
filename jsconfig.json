@@ -5,6 +5,5 @@
 			"@/*": ["*"]
 		}
 	},
-	"include": ["src"],
-	"allowTs": true,
+	"include": ["src"]
 }

@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route, useNavigate } from 'react-router'
 import Login from './components/Login'
 import Layout from './components/Layout'
 import NotFound from './components/NotFound'
 import Rooms from './components/Rooms'
 import Clients from './components/Clients'
-
+import { store } from 'utils/Storage'
 export default function Router() {
 	const nav = useNavigate()
-	if(localStorage.getItem('token') == null) {
+	if (localStorage.getItem('token') == null) {
 		return <Login />
 	}
+	store.loadInfo()
 	return (
 		<Layout>
 			<Routes>
