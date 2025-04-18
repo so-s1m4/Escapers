@@ -22,23 +22,50 @@ class Store {
 			rooms: rooms.data,
 		})
 	}
-	async loadInfo() {
+
+	async getGames() {
+		if (this.state.games) return this.state.games
+		const games = await Game.getLocationsGames(this.state.curLocation)
+		this.setState({ games: games.data })
+		return games.data
+	}
+
+	async getRooms() {
+		if (this.state.rooms) return this.state.rooms
+		const rooms = await Rooms.getRooms(this.state.curLocation)
+		this.setState({ rooms: rooms.data })
+		return rooms.data
+	}
+
+	async getMyInfo() {
+		if (this.state.myInfo) return this.state.myInfo
 		const myInfo = await Admin.getMyInfo()
+		if (myInfo.success) {
+			this.setState({ myInfo: myInfo.data })
+			return myInfo.data
+		} else {
+			localStorage.clear()
+			window.location.reload()
+			this.listeners.forEach(component => component.forceUpdate())
+		}
+		return null
+	}
+
+	async loadInfo() {
+		const myInfo = await this.getMyInfo()
+
 		let myLocations;
-		if (myInfo.success && myInfo.data.isSuperAdmin) {
+		if (myInfo && myInfo.isSuperAdmin) {
 			myLocations = await Location.getLocations()
 		} else {
 			myLocations = await Location.getMyLocations()
 		}
 
-		if (myInfo.success) {
-			this.state.myInfo = myInfo.data
+		if (myInfo) {
+			this.state.myInfo = myInfo
 			this.state.myLocations = myLocations.data
 			this.state.curLocation =
 				parseInt(localStorage.getItem('curLocation')) || myLocations.data[0]?.id || ''
-		} else {
-			localStorage.clear()
-			window.location.reload()
 		}
 		this.componentDidUpdate(this.state)
 		this.listeners.forEach(component => component.loadInfo())
