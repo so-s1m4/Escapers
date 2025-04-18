@@ -26,27 +26,21 @@ class Layout extends ComponentWithStore {
 							</div>
 						</div>
 						<div className={css.navList}>
-							<div onClick={() => this.props.nav('/admin/settings')}>
-								Settings
-							</div>
-							<div onClick={() => this.props.nav('/admin/logout')}>Logout</div>
+							<div onClick={() => this.props.nav('/admin/sa')}>SA Menu</div>
 						</div>
 					</div>
 					<div className={css.navList}>
 						<select
 							onChange={e => {
-								this.store.setState({ curLocation: e.target.value });
+								this.store.setState({ curLocation: e.target.value })
 							}}
-							value={
-								this.store.state.curLocation ||
-								''
-							}
+							value={this.store.state.curLocation || ''}
 						>
 							{this.store.state.myLocations.length === 0 && (
-								<option value="">No Locations</option>
+								<option value=''>No Locations</option>
 							)}
 							{this.store.state.myLocations.length > 0 && (
-								<option value="">Select Location</option>
+								<option value=''>Select Location</option>
 							)}
 							{this.store.state.myLocations.map(loc => {
 								return (
@@ -56,6 +50,16 @@ class Layout extends ComponentWithStore {
 								)
 							})}
 						</select>
+					</div>
+					<div className={css.navList}>
+						<div
+							onClick={() => {
+								localStorage.clear()
+								window.location.reload()
+							}}
+						>
+							Logout
+						</div>
 					</div>
 				</div>
 				<div className={css.wrapper}>{this.props.children}</div>

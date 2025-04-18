@@ -8,7 +8,8 @@
 
 	z-index: 2;
 
-	justify-content: space-between;
+	justify-content: space-evenly;
+	padding: 0 2rem; 
 }
 
 .navList {
@@ -28,7 +29,7 @@
 	color: var(--color-orange);
 	outline: none;
 	text-decoration: none;
-	font-size: 1.6rem;
+	font-size: 1.5vw;
 	transition: all 0.3s ease-in-out;
 	border-radius: 0.5rem;
 

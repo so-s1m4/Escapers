@@ -3,7 +3,7 @@ import axios from 'axios'
 
 // 1. Базовая конфигурация ────────────────────────────────
 const api = axios.create({
-	baseURL: 'http://localhost:8000/api',
+	baseURL: 'http://192.168.31.135:8000/api',
 	timeout: 10_000,
 	headers: { 'Content-Type': 'application/json' },
 	// withCredentials: true,

@@ -5,6 +5,7 @@ import Layout from './components/Layout'
 import NotFound from './components/NotFound'
 import Rooms from './components/Rooms'
 import Clients from './components/Clients'
+import SuperAdmin from './components/sa/SuperAdmin'
 import { store } from 'utils/Storage'
 export default function Router() {
 	const nav = useNavigate()
@@ -18,6 +19,7 @@ export default function Router() {
 				<Route path='/rooms/*' element={<Rooms nav={nav} />} />
 				<Route path='/clients/*' element={<Clients />} />
 				<Route path='/bookings/*' element={<h2>Bookings</h2>} />
+				<Route path='/sa/*' element={<SuperAdmin />} />
 				<Route path='*' element={<NotFound />} />
 			</Routes>
 		</Layout>

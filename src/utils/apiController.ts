@@ -31,7 +31,7 @@ export class Admin {
 		return await fetchData.post('/admin/register', data).then(res => res)
 	}
 	static async updateAdmin(adminId: number, data: adminCreateData) {
-		return await fetchData.put(`/admin/${adminId}`, data).then(res => res)
+		return await fetchData.patch(`/admin/${adminId}`, data).then(res => res)
 	}
 	static async deleteAdmin(adminId: number) {
 		return await fetchData.delete(`/admin/${adminId}`).then(res => res)
@@ -63,7 +63,7 @@ export class Location {
 	}
 
 	static async updateLocation(locationId: number, data: locationCreateData) {
-		return await fetchData.put(`/location/${locationId}`, data).then(res => res)
+		return await fetchData.patch(`/location/${locationId}`, data).then(res => res)
 	}
 	static async deleteAdminFromLocation(adminId: number, locationId: number) {
 		return await fetchData
@@ -103,7 +103,7 @@ export class Game {
 			maxPlayers: number
 		}
 	) {
-		return await fetchData.put(
+		return await fetchData.patch(
 			`/location/${locationId}/game/${gameId}`,
 			data
 		).then(res => res)
@@ -111,6 +111,14 @@ export class Game {
 }
 export class Rooms {
 	static async getRooms(locationId: number) {
+		return [{
+			id: 1,
+			name: 'Room 1',
+			players: [1,2,3,4],
+			maxPlayer: 10,
+			isActive: true,
+			locationId: 2,
+		}];
 		return fetchData.get(`/location/${locationId}/rooms`).then(res => res);
 	}
 }

@@ -5,7 +5,7 @@ import { Admin, Game, Location, Rooms } from './apiController.ts'
 class Store {
 	constructor() {
 		this.state = {
-			myInfo: {},
+			myInfo: null,
 			myLocations: [],
 			curLocation: parseInt(localStorage.getItem('curLocation')) || '',
 		}
@@ -13,6 +13,9 @@ class Store {
 		this.listeners = new Set()
 	}
 	async componentDidUpdate(newState) {
+		if (newState.curLocation == '' || newState.curLocation == undefined) {
+			return null
+		}
 		const [games, rooms] = await Promise.all([
 			Game.getLocationsGames(newState.curLocation),
 			Rooms.getRooms(newState.curLocation),
