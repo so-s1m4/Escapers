@@ -109,7 +109,11 @@ export class Game {
 		).then(res => res)
 	}
 }
-export class Rooms {}
+export class Rooms {
+	static async getRooms(locationId: number) {
+		return fetchData.get(`/location/${locationId}/rooms`).then(res => res);
+	}
+}
 
 // EXAMPLE FUNCTION
 //static async getMyInfo() {}

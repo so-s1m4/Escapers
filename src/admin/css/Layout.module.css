@@ -7,6 +7,8 @@
 	gap: 1rem;
 
 	z-index: 2;
+
+	justify-content: space-between;
 }
 
 .navList {
@@ -20,9 +22,11 @@
 }
 
 .navList > * {
+	background: transparent;
 	list-style: none;
 	padding: 0.5rem 1rem;
 	color: var(--color-orange);
+	outline: none;
 	text-decoration: none;
 	font-size: 1.6rem;
 	transition: all 0.3s ease-in-out;
@@ -35,6 +39,9 @@
 	text-overflow: ellipsis;
 
 	font-weight: 600;
+}
+.navList > select {
+	border: 1px solid;
 }
 
 .navList > *:hover {

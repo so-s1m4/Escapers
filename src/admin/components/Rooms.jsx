@@ -1,5 +1,6 @@
 import css from 'admin/css/Rooms.module.css'
 import Room from './Room'
+import CreateRoom from './CreateRoom'
 import { Routes, Route } from 'react-router-dom'
 import ComponentWithStore from 'utils/ComponentWithStore'
 
@@ -78,7 +79,7 @@ export default class Rooms extends ComponentWithStore {
 		return (
 			<>
 				<div className={css.nav}>
-					<button className={css.addButton}>Create Room</button>
+					<button className={css.addButton} onClick={()=>this.props.nav("/admin/rooms/create")}>Create Room</button>
 
 					<div
 						style={{
@@ -105,6 +106,7 @@ export default class Rooms extends ComponentWithStore {
 					<Routes>
 						<Route path='/' />
 						<Route path=':id' element={<Room />} />
+						<Route path='create' element={<CreateRoom />} />
 					</Routes>
 				</div>
 			</>
