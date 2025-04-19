@@ -1,31 +1,35 @@
-import ComponentWithStore from "utils/ComponentWithStore";
-import css from "admin/css/CreateRoom.module.css";
+import ComponentWithStore from 'utils/ComponentWithStore'
+import css from 'admin/css/CreateRoom.module.css'
+import { Room } from 'utils/apiController.ts'
 
 export default class CreateRoom extends ComponentWithStore {
+	async createRoom(gameId) {
+		const room = await Room.createRoom(this.state.curLocation, gameId)
+		this.store.setState({ rooms: [...this.state.rooms, room.data] })
+	}
 
-
-  createRoom(game){
-
-  }
-
-  gameTemplate(game) {
-    return (
-			<div key={game.id} className={css.gameItem}>
+	gameTemplate(game) {
+		console.log(game.icon)
+		return (
+			<div key={game.id} className={css.gameItem} onClick={() => this.createRoom(game.id)}>
 				<img
-					src='http://192.168.31.135:8000/public/default.jpg'
+					src={`http://localhost:8000/public/${""+game.icon}`}
 					alt={game.name}
 					style={{ width: '100%', height: 'auto' }}
 				/>
 				<div className={css.gameItemContent}>
-					<div className={css.gameItemColorMarker} style = {{backgroundColor: game.color}}></div>
-          <div className={css.gameItemName}>{game.name}</div>
-          <div className={css.gameItemMaxPlayers}>max {game.maxPlayers} 🤸</div>
+					<div
+						className={css.gameItemColorMarker}
+						style={{ backgroundColor: game.color }}
+					></div>
+					<div className={css.gameItemName}>{game.name}</div>
+					<div className={css.gameItemMaxPlayers}>max {game.maxPlayers} 🤸</div>
 				</div>
 			</div>
 		)
-  }
-  render() {
-    return (
+	}
+	render() {
+		return (
 			<div
 				style={{
 					display: 'flex',
@@ -34,7 +38,6 @@ export default class CreateRoom extends ComponentWithStore {
 					padding: '1rem',
 				}}
 			>
-
 				<h1>Create Room</h1>
 				<h2>Select Game</h2>
 				<div className={css.gameList}>
@@ -42,5 +45,5 @@ export default class CreateRoom extends ComponentWithStore {
 				</div>
 			</div>
 		)
-  }
+	}
 }

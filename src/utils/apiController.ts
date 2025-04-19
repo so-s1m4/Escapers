@@ -53,17 +53,16 @@ export class Location {
 	static async addLocation(data: locationCreateData) {
 		return await fetchData.post('/location', data).then(res => res)
 	}
-	static async addAdminToLocation(data: {
-		adminId: number
-		locationId: number
-	}) {
+	static async addAdminToLocation(adminId: number, locationId: number) {
 		return await fetchData
-			.post(`/admin/${data.adminId}/location/${data.locationId}`)
+			.post(`/admin/${adminId}/location/${locationId}`)
 			.then(res => res)
 	}
 
 	static async updateLocation(locationId: number, data: locationCreateData) {
-		return await fetchData.patch(`/location/${locationId}`, data).then(res => res)
+		return await fetchData
+			.patch(`/location/${locationId}`, data)
+			.then(res => res)
 	}
 	static async deleteAdminFromLocation(adminId: number, locationId: number) {
 		return await fetchData
@@ -84,14 +83,21 @@ export class Game {
 		return await fetchData.get(`/location/${locationId}/game`).then(res => res)
 	}
 	static async getLocationGameById(locationId: number, gameId: number) {
-		return await fetchData.get(
-			`/location/${locationId}/game/${gameId}`,
-		).then(res => res)
+		return await fetchData
+			.get(`/location/${locationId}/game/${gameId}`)
+			.then(res => res)
 	}
 	static async addGameToLocation(locationId: number, data: FormData) {
-		return await fetchData.post(`/location/${locationId}/game`, data).then(
-			res => res
-		)
+		return await fetchData
+			.post(`/location/${locationId}/game`, data, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			})
+			.then(res => res)
+	}
+	static async deleteGameFromLocation(locationId: number, gameId: number) {
+		return await fetchData
+			.delete(`/location/${locationId}/game/${gameId}`)
+			.then(res => res)
 	}
 	static async updateLocationGame(
 		locationId: number,
@@ -103,23 +109,28 @@ export class Game {
 			maxPlayers: number
 		}
 	) {
-		return await fetchData.patch(
-			`/location/${locationId}/game/${gameId}`,
-			data
-		).then(res => res)
+		return await fetchData
+			.patch(`/location/${locationId}/game/${gameId}`, data)
+			.then(res => res)
 	}
 }
-export class Rooms {
+export class Room {
 	static async getRooms(locationId: number) {
-		return [{
-			id: 1,
-			name: 'Room 1',
-			players: [1,2,3,4],
-			maxPlayer: 10,
-			isActive: true,
-			locationId: 2,
-		}];
-		return fetchData.get(`/location/${locationId}/rooms`).then(res => res);
+		return await fetchData
+			.get(`/room`, {
+				params: {
+					locationId,
+				},
+			})
+			.then(res => res)
+	}
+	static async createRoom(locationId: number, gameId: number) {
+		return await fetchData
+			.post(`/room`, { LocationId: locationId, GameId: gameId })
+			.then(res => res)
+	}
+	static async closeRoom(id: number) {
+		return await fetchData.patch(`/room/${id}/close`).then(res => res)
 	}
 }
 

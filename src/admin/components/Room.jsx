@@ -1,4 +1,5 @@
 import ComponentWithStore from 'utils/ComponentWithStore'
+import { Admin, Room as RoomAPI } from 'utils/apiController.ts'
 import { withRouter } from 'utils/withRouter'
 import css from 'admin/css/Room.module.css'
 
@@ -12,38 +13,47 @@ class Room extends ComponentWithStore {
 		this.closeIt = this.closeIt.bind(this)
 	}
 
-
-	closeIt() {
-		this.state.room.false = false
+	async closeIt() {
+		this.state.room.isActivate = false
 		this.store.state.rooms = this.store.state.rooms.map(room => {
 			if (room.id == this.state.roomId) {
-				room.active = false
+				room.isActivate = false
 			}
 			return room
 		})
-		this.store.setState({rooms: this.store.state.rooms})
+		this.store.setState({ rooms: this.store.state.rooms })
+
+		await RoomAPI.closeRoom(this.state.roomId)
 	}
-	componentDidMount() {
-		this.store.register(this)
-		this.loadInfo()
-		this.state.room = this.store.state.rooms.find(
+	update() {
+		this.state.room = this.store.state.rooms?.find(
 			room => room.id == this.state.roomId
 		)
 		this.setState({ room: this.state.room })
 	}
+	componentDidMount() {
+		this.store.register(this)
+		setTimeout(() => {
+			this.update()
+		}, 300)
+	}
 
-	componentDidUpdate(prevProps) {
+	async componentDidUpdate(prevProps) {
 		if (prevProps.params.id !== this.props.params.id) {
 			this.state.roomId = this.props.params.id
 			this.state.room = this.store.state.rooms.find(
 				room => room.id == this.state.roomId
 			)
+			this.state.room.admin = await Admin.getAdmin(
+				this.state.room.AdminId
+			).then(res => res.data.username)
 			this.setState({ room: this.state.room })
 		}
 	}
 
 	render() {
 		if (!this.state.room) return null
+
 		return (
 			<div
 				style={{
@@ -56,7 +66,7 @@ class Room extends ComponentWithStore {
 				<div className={css.header}>
 					<div className={css.roomId}>
 						#{this.state.room.id} -
-						{this.state.room.active ? (
+						{this.state.room.isActivate ? (
 							<b style={{ color: 'lime' }}>Active</b>
 						) : (
 							<b style={{ color: 'red' }}>Inactive</b>
@@ -65,13 +75,13 @@ class Room extends ComponentWithStore {
 					<div className={css.buttonsWrapper}>
 						<button
 							className={css.addButton}
-							disabled={!this.state.room.active}
+							disabled={!this.state.room.isActivate}
 						>
 							Add Player
 						</button>
 						<button
 							className={css.closeButton}
-							disabled={!this.state.room.active}
+							disabled={!this.state.room.isActivate}
 							onClick={this.closeIt}
 						>
 							Terminate
@@ -82,28 +92,28 @@ class Room extends ComponentWithStore {
 					<div className={css.roomGame}>
 						{
 							this.store.state.games.find(
-								game => game.id == this.state.room.gameId
+								game => game.id == this.state.room.GameId
 							).name
 						}
 					</div>
-					<div className={css.roomCode}>
-						CODE:{' '}
-						<b style={{ color: 'white', fontSize: '3rem' }}>
-							{this.state.room.code}
-						</b>
-					</div>
+					{this.state.room.isActivate && (
+						<div className={css.roomCode}>
+							CODE:{' '}
+							<b style={{ color: 'white', fontSize: '3rem' }}>
+								{this.state.room.code}
+							</b>
+						</div>
+					)}
 				</div>
 				<div className={css.middleBar}>
 					<div className={css.roomInfo}>
 						<div className={css.roomInfoText}>
-							{this.store.state.admins.find(
-								admin => admin.id == this.state.room.adminId
-							).firstName || 'No admin'}
+							{this.state.room.admin || 'No admin'}
 						</div>
 						<div className={css.roomInfoText}>
 							{
-								this.store.state.locations.find(
-									location => location.id == this.state.room.locId
+								this.store.state.myLocations.find(
+									l => l.id == this.state.room.LocationId
 								).address
 							}
 						</div>
@@ -127,7 +137,14 @@ class Room extends ComponentWithStore {
 							height: '10%',
 						}}
 					>
-						<div className={css.title}>Players {this.state.room.playersIDs.length}/{this.store.state.games.find(game => game.id == this.state.room.gameId).maxPlayers}</div>
+						<div className={css.title}>
+							Players 0/
+							{
+								this.store.state.games.find(
+									game => game.id == this.state.room.GameId
+								).maxPlayers
+							}
+						</div>
 					</div>
 					<div className={css.playersWrapper}>
 						<table className={css.playersTable}>
@@ -144,7 +161,7 @@ class Room extends ComponentWithStore {
 							</thead>
 							<tbody>
 								{(() => {
-									return this.state.room.playersIDs.map(playerId => {
+									return this.state.room.playersIDs?.map(playerId => {
 										const client = this.store.state.clients.find(
 											client => client.id == playerId
 										)

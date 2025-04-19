@@ -6,7 +6,7 @@ import ComponentWithStore from 'utils/ComponentWithStore'
 
 export default class Rooms extends ComponentWithStore {
 	roomTemplate(room) {
-		const game = this.state.games.find(game => game.id === room.gameId)
+		const game = this.state.games.find(g => g.id == room.GameId)
 		if (!game) return null
 
 		return (
@@ -28,15 +28,17 @@ export default class Rooms extends ComponentWithStore {
 				<div
 					style={{
 						display: 'flex',
-						justifyContent: 'space-between',
+						justifyContent: 'space-between',	
 					}}
 				>
 					<div className={css.roomID}>
 						<b>#{room.id}</b>
 					</div>
-					<div className={css.roomCode}>
-						Code: <b>{room.code}</b>
-					</div>
+					{room.isActivate && (
+						<div className={css.roomCode}>
+							Code: <b>{room.code}</b>
+						</div>
+					)}
 				</div>
 				<div
 					style={{
@@ -49,7 +51,7 @@ export default class Rooms extends ComponentWithStore {
 					</div>
 					<div className={css.roomPlayers}>
 						<b>
-							{room.playersIDs.length}/{game.maxPlayers}
+							{room.playersIDs?.length}/{game.maxPlayers}
 						</b>
 					</div>
 				</div>
@@ -66,7 +68,7 @@ export default class Rooms extends ComponentWithStore {
 							hour12: false,
 						})}
 					</div>
-					{room.active ? (
+					{room.isActivate ? (
 						<b style={{ color: 'lime' }}>Active</b>
 					) : (
 						<b style={{ color: 'red' }}>Inactive</b>
@@ -79,7 +81,12 @@ export default class Rooms extends ComponentWithStore {
 		return (
 			<>
 				<div className={css.nav}>
-					<button className={css.addButton} onClick={()=>this.props.nav("/admin/rooms/create")}>Create Room</button>
+					<button
+						className={css.addButton}
+						onClick={() => this.props.nav('/admin/rooms/create')}
+					>
+						Create Room
+					</button>
 
 					<div
 						style={{
@@ -94,10 +101,7 @@ export default class Rooms extends ComponentWithStore {
 
 						<div className={css.rooms}>
 							{this.state.rooms
-								?.filter(room => room.active)
-								.map(room => this.roomTemplate(room))}
-							{this.state.rooms
-								?.filter(room => !room.active)
+								?.filter(room => room.isActivate)
 								.map(room => this.roomTemplate(room))}
 						</div>
 					</div>

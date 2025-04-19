@@ -1,6 +1,4 @@
-import React from 'react'
-import fetchData from './fetchData.ts'
-import { Admin, Game, Location, Rooms } from './apiController.ts'
+import { Admin, Game, Location, Room } from './apiController.ts'
 
 class Store {
 	constructor() {
@@ -16,13 +14,15 @@ class Store {
 		if (newState.curLocation == '' || newState.curLocation == undefined) {
 			return null
 		}
-		const [games, rooms] = await Promise.all([
+		let [games, rooms] = await Promise.all([
 			Game.getLocationsGames(newState.curLocation),
-			Rooms.getRooms(newState.curLocation),
+			Room.getRooms(newState.curLocation),
 		])
+		rooms = rooms.data
+		rooms.reverse()
 		this.setState({
 			games: games.data,
-			rooms: rooms.data,
+			rooms,
 		})
 	}
 
@@ -35,8 +35,10 @@ class Store {
 
 	async getRooms() {
 		if (this.state.rooms) return this.state.rooms
-		const rooms = await Rooms.getRooms(this.state.curLocation)
-		this.setState({ rooms: rooms.data })
+		const rooms = await Room.getRooms(this.state.curLocation)
+		rooms = rooms.data
+		rooms.reverse()
+		this.setState({ rooms })
 		return rooms.data
 	}
 
@@ -85,6 +87,7 @@ class Store {
 		if (newState.curLocation == '' || newState.curLocation == undefined) {
 			newState.curLocation = this.state.curLocation
 		}
+
 		if (newState.curLocation != this.state.curLocation) {
 			this.state.curLocation = await parseInt(newState.curLocation)
 			localStorage.setItem('curLocation', newState.curLocation)

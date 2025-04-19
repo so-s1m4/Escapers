@@ -19,7 +19,7 @@ export default function Router() {
 				<Route path='/rooms/*' element={<Rooms nav={nav} />} />
 				<Route path='/clients/*' element={<Clients />} />
 				<Route path='/bookings/*' element={<h2>Bookings</h2>} />
-				<Route path='/sa/*' element={<SuperAdmin />} />
+				<Route path='/sa/*' element={<SuperAdmin store = {store}/>} />
 				<Route path='*' element={<NotFound />} />
 			</Routes>
 		</Layout>

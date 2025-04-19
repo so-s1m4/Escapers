@@ -25,14 +25,17 @@ class Layout extends ComponentWithStore {
 								Bookings
 							</div>
 						</div>
-						<div className={css.navList}>
-							<div onClick={() => this.props.nav('/admin/sa')}>SA Menu</div>
-						</div>
+						{this.store.state.myInfo?.isSuperAdmin && (
+							<div className={css.navList}>
+								<div onClick={() => this.props.nav('/admin/sa')}>SA Menu</div>
+							</div>
+						)}
 					</div>
 					<div className={css.navList}>
 						<select
 							onChange={e => {
 								this.store.setState({ curLocation: e.target.value })
+								this.props.nav('/admin/rooms')
 							}}
 							value={this.store.state.curLocation || ''}
 						>

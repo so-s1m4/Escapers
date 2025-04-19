@@ -1,15 +1,16 @@
 // src/lib/axios.js
 import axios from 'axios'
 
-// 1. Базовая конфигурация ────────────────────────────────
+const IP = 'localhost'
+const PORT = '8000'
+const BASE_URL = `http://${IP}:${PORT}`
+
 const api = axios.create({
-	baseURL: 'http://192.168.31.135:8000/api',
+	baseURL: `${BASE_URL}/api`,
 	timeout: 10_000,
 	headers: { 'Content-Type': 'application/json' },
-	// withCredentials: true,
 })
 
-// 2. Запрос‑интерцептор ──────────────────────────────────
 api.interceptors.request.use(
 	cfg => {
 		const token = localStorage.getItem('token')
@@ -20,7 +21,6 @@ api.interceptors.request.use(
 	err => Promise.reject(err)
 )
 
-// 3. Ответ‑интерцептор ───────────────────────────────────
 api.interceptors.response.use(
 	res => res.data,
 	err => {
