@@ -110,7 +110,9 @@ export class Game {
 		}
 	) {
 		return await fetchData
-			.patch(`/location/${locationId}/game/${gameId}`, data)
+			.patch(`/location/${locationId}/game/${gameId}`, data, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			})
 			.then(res => res)
 	}
 }

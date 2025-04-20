@@ -37,7 +37,6 @@ class Store {
 		if (this.state.rooms) return this.state.rooms
 		const rooms = await Room.getRooms(this.state.curLocation)
 		rooms = rooms.data
-		rooms.reverse()
 		this.setState({ rooms })
 		return rooms.data
 	}

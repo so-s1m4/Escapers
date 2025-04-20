@@ -3,8 +3,26 @@ import Room from './Room'
 import CreateRoom from './CreateRoom'
 import { Routes, Route } from 'react-router-dom'
 import ComponentWithStore from 'utils/ComponentWithStore'
+import { withRouter } from 'utils/withRouter'
+import historyIcon from "img/history.svg"
 
-export default class Rooms extends ComponentWithStore {
+
+class Rooms extends ComponentWithStore {
+	constructor(props) {
+		super(props)
+		this.state = {
+			showHistory: false,
+		}
+	}
+
+	componentDidMount() {
+		this.store.register(this)
+
+		if (window.location.pathname == '/admin/rooms/history') {
+			this.setState({ showHistory: true })
+		}
+	}
+
 	roomTemplate(room) {
 		const game = this.state.games.find(g => g.id == room.GameId)
 		if (!game) return null
@@ -97,11 +115,22 @@ export default class Rooms extends ComponentWithStore {
 							gap: '1rem',
 						}}
 					>
-						<div className={css.title}>Rooms</div>
+						<div className={css.title}>
+							Rooms{' '}
+							<img onClick={() => {
+								this.setState({ showHistory: !this.state.showHistory })
+
+							}} className={css.historyBtn} src={historyIcon} />
+						</div>
 
 						<div className={css.rooms}>
 							{this.state.rooms
-								?.filter(room => room.isActivate)
+								?.filter(room => {
+									return this.state.showHistory || room.isActivate
+								})
+								.sort((a, b) => {
+									return b.id - a.id
+								})
 								.map(room => this.roomTemplate(room))}
 						</div>
 					</div>
@@ -117,3 +146,5 @@ export default class Rooms extends ComponentWithStore {
 		)
 	}
 }
+
+export default withRouter(Rooms)

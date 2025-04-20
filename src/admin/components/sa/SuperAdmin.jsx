@@ -205,6 +205,7 @@ function Admins({ store }) {
 function Games({ store }) {
 	const [games, setGames] = useState([])
 
+
 	const createGame = async () => {
 		const file = document.querySelector('input[name="file"]').files[0]
 
@@ -231,20 +232,30 @@ function Games({ store }) {
 			})
 	}
 	const updateGame = async gameId => {
+		const file = document.getElementById(`tr${gameId}Icon`).files
 		const data = {
-			name: document.querySelector(`input[name="tr${gameId}"]`).value,
-			color: document.querySelector(`input[name="tr${gameId}"]`).value,
-			maxPlayers: document.querySelector(`input[name="tr${gameId}"]`).value,
+			name: document.querySelector(`#tr${gameId}Name`).value,
+			color: document.querySelector(`#tr${gameId}Color`).value,
+			maxPlayers: document.querySelector(`#tr${gameId}maxPlayers`).value,
 		}
 
 		Game.updateLocationGame(store.state.curLocation, gameId, {
+			...(file ? {file:file[0]} : {}),
 			data: JSON.stringify(data),
 		})
 			.then(res => {
+				console.log(res)
 				if (res.success) {
-					store.state.games.push(res.data)
-					store.state.games = store.state.games.filter(g => 1 == 1)
 
+					Game.getLocationsGames(store.state.curLocation).then(res => {
+						if (!res.success) {
+							console.error('Failed to fetch games')
+							return
+						}
+						store.state.games = res.data
+						setGames(res.data)
+					})
+					store.state.games = store.state.games.filter(g => 1 == 1)
 					store.setState({ games: store.state.games })
 				}
 			})
@@ -263,8 +274,9 @@ function Games({ store }) {
 			setGames(response.data)
 		}
 
-		fetchGames()
-	}, [store.state.games])
+		if (store.state.curLocation) fetchGames()
+			
+	}, [store.state.games, store.state.curLocation])
 
 	return (
 		<>
@@ -321,6 +333,7 @@ function Games({ store }) {
 										defaultValue={game.name}
 										disabled
 										name={`tr${game.id}`}
+										id={`tr${game.id}Name`}
 									></input>
 								</td>
 								<td>
@@ -329,16 +342,26 @@ function Games({ store }) {
 										defaultValue={game.color}
 										type='color'
 										name={`tr${game.id}`}
+										id={`tr${game.id}Color`}
 										disabled
 									></input>
 								</td>
-								<td>{game.icon}</td>
+								<td>
+									<input
+										className={css.inputField}
+										type='file'
+										name={`tr${game.id}`}
+										id={`tr${game.id}Icon`}
+										disabled
+									></input>
+								</td>
 								<td>
 									<input
 										defaultValue={game.maxPlayers}
 										className={css.inputField}
 										type='number'
 										name={`tr${game.id}`}
+										id={`tr${game.id}maxPlayers`}
 										disabled
 									></input>
 								</td>
@@ -349,11 +372,12 @@ function Games({ store }) {
 												`tr${game.id}`
 											)
 											elements.forEach(element => {
-												if (!element.disabled) {
-													updateGame(game.id)
-												}
+												
 												element.disabled = !element.disabled
 											})
+											if (elements[0].disabled) {
+													updateGame(game.id)
+												}
 										}}
 									>
 										Edit
@@ -382,8 +406,200 @@ function Games({ store }) {
 		</>
 	)
 }
-function Locations() {
-	return <div>Locations</div>
+function Locations({ store }) {
+	const [locs, setLocations] = useState([])
+	const [UpdateHandler, update] = useState(false);
+
+	const createLoc = async () => {
+
+		const data = {
+			address: document.querySelector('input[name="address"]').value,
+			city: document.querySelector('input[name="city"]').value,
+			postcode: document.querySelector('input[name="postcode"]').value,
+			mail: document.querySelector('input[name="email"]').value,
+			phone: document.querySelector('input[name="phone"]').value,
+		}
+
+		Location.addLocation(data)
+			.then(res => {
+				if (res.success) {
+					store.state.myLocations.push(res.data)
+					setLocations(store.state.myLocations)
+					store.state.myLocations = store.state.myLocations.filter(g => 1 == 1)
+
+					store.setState({ myLocations: store.state.myLocations })
+				}
+			})
+			.catch(err => {
+				console.error(err)
+			})
+	}
+	const updateLoc = async locId => {
+		const data = {
+			address: document.querySelector(`#tr${locId}Address`).value,
+			city: document.querySelector(`#tr${locId}City`).value,
+			postcode: document.querySelector(`#tr${locId}Postcode`).value,
+			mail: document.querySelector(`#tr${locId}Email`).value,
+			phone: document.querySelector(`#tr${locId}Phone`).value,
+		}
+
+		Location.updateLocation(locId, data)
+			.then(res => {
+				if (res.success) {
+					update(!UpdateHandler)
+				}
+			})
+			.catch(err => {
+				console.error(err)
+			})
+	}
+
+	useEffect(() => {
+		const fetchLocs = async () => {
+			const response = await Location.getLocations()
+			if (!response.success) {
+				console.error('Failed to fetch locs')
+				return
+			}
+			setLocations(response.data)
+		}
+
+		fetchLocs()
+	}, [UpdateHandler])
+
+	return (
+		<>
+			<h1>Locations</h1>
+			<table className={css.table}>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Adress</th>
+						<th>City</th>
+						<th>POST_CODE</th>
+						<th>Phone</th>
+						<th>Mail</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr>
+						<td></td>
+						<td>
+							<input className={css.inputField} type='text' name='address' />
+						</td>
+						<td>
+							<input className={css.inputField} type='text' name='city' />
+						</td>
+						<td>
+							<input className={css.inputField} type='number' name='postcode' />
+						</td>
+						<td>
+							<input className={css.inputField} type='phone' name='phone' />
+						</td>
+						<td>
+							<input className={css.inputField} type='email' name='email' />
+						</td>
+						<td>
+							<button className={css.createBtn} onClick={createLoc}>
+								Create
+							</button>
+						</td>
+					</tr>
+					{locs.map(loc => {
+						return (
+							<tr className={css.tableRow} key={loc.id} id={loc.id}>
+								<td>{loc.id}</td>
+								<td>
+									<input
+										className={css.inputField}
+										defaultValue={loc.address}
+										disabled
+										name={`tr${loc.id}`}
+										id={`tr${loc.id}Address`}
+									></input>
+								</td>
+								<td>
+									<input
+										className={css.inputField}
+										defaultValue={loc.city}
+										type='text'
+										name={`tr${loc.id}`}
+										id={`tr${loc.id}City`}
+										disabled
+									></input>
+								</td>
+								<td>
+									<input
+										defaultValue={loc.postcode}
+										className={css.inputField}
+										type='number'
+										name={`tr${loc.id}`}
+										id={`tr${loc.id}Postcode`}
+										disabled
+									></input>
+								</td>
+								<td>
+									<input
+										defaultValue={loc.phone}
+										className={css.inputField}
+										type='phone'
+										name={`tr${loc.id}`}
+										id={`tr${loc.id}Phone`}
+										disabled
+									></input>
+								</td>
+								<td>
+									<input
+										defaultValue={loc.mail}
+										className={css.inputField}
+										type='email'
+										name={`tr${loc.id}`}
+										id={`tr${loc.id}Email`}
+										disabled
+									></input>
+								</td>
+								<td>
+									<button
+										onClick={() => {
+											const elements = document.getElementsByName(`tr${loc.id}`)
+											elements.forEach(element => {
+												element.disabled = !element.disabled
+											})
+											if (elements[0].disabled) {
+												updateLoc(loc.id)
+											}
+										}}
+									>
+										Edit
+									</button>
+
+									<button
+										onClick={async () => {
+											Location.deleteLocation(loc.id).then(res => {
+												if (res.success) {
+													store.state.myLocations = locs.filter(
+														l => l.id !== loc.id
+													)
+													store.setState({
+														myLocations: store.state.myLocations
+													})
+													setLocations(locs.filter(l => l.id !== loc.id))
+												}
+											})
+										}}
+									>
+										Delete
+									</button>
+								</td>
+							</tr>
+						)
+					})}
+				</tbody>
+			</table>
+		</>
+	)
 }
 
 class SuperAdmin extends ComponentWithStore {

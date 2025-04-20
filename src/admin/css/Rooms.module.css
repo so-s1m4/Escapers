@@ -11,6 +11,9 @@
 }
 
 .title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	color: var(--color-orange);
 	font-size: 2em;
 	font-weight: bold;
@@ -18,6 +21,11 @@
 	padding: 10px;
 
 	border-bottom: 0.1rem solid var(--color-orange);
+}
+.historyBtn {
+	height: 2rem;
+	transform: translateY(25%);
+	cursor: pointer;
 }
 
 .addButton {

@@ -73,6 +73,27 @@
 	font-size: 1rem;
 }
 
+.inputField[type="file"]::-webkit-file-upload-button {
+	background: transparent;
+	border: 1px solid var(--color-orange);
+	outline: 0;
+
+	color: var(--color-orange);
+	margin-right: .5rem;
+
+	transition: background-color 0.3s ease;
+
+	cursor: pointer;
+}
+
+.inputField[type="file"]::-webkit-file-upload-button:disabled {
+	color: #444;
+}
+.inputField[type="file"]::-webkit-file-upload-button:hover {
+	background: var(--color-orange);
+	color: #444;
+}
+
 .createBtn {
 	width: 100%;
 	margin: 1rem 0;
