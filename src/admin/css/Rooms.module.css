@@ -41,8 +41,6 @@
 	border-radius: 2rem;
 
 	font-weight: bold;
-
-	margin-top: 20px;
 }
 
 .addButton:hover {
@@ -84,5 +82,5 @@
 	gap: 1rem;
 	padding: 1rem;
 
-	background: #222;
+	background: #111;
 }

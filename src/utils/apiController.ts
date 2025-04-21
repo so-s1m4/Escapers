@@ -16,87 +16,89 @@ type locationCreateData = {
 
 export class Admin {
 	static async getMyInfo() {
-		return await fetchData.get('/admin').then(res => res)
+		return await fetchData.get('/admins/me').then(res => res)
 	}
 	static async getAdmins() {
-		return await fetchData.get('/admin/list').then(res => res)
+		return await fetchData.get('/admins').then(res => res)
 	}
 	static async getAdmin(id: number) {
-		return await fetchData.get(`/admin/${id}`).then(res => res)
+		return await fetchData.get(`/admins/${id}`).then(res => res)
 	}
 	static async login(data: { username: string; password: string }) {
-		return await fetchData.post('/admin/login', data).then(res => res)
+		return await fetchData.post('/admins/login', data).then(res => res)
 	}
 	static async addAdmin(data: adminCreateData) {
-		return await fetchData.post('/admin/register', data).then(res => res)
+		return await fetchData.post('/admins/register', data).then(res => res)
 	}
 	static async updateAdmin(adminId: number, data: adminCreateData) {
-		return await fetchData.patch(`/admin/${adminId}`, data).then(res => res)
+		return await fetchData.patch(`/admins/${adminId}`, data).then(res => res)
 	}
 	static async deleteAdmin(adminId: number) {
-		return await fetchData.delete(`/admin/${adminId}`).then(res => res)
+		return await fetchData.delete(`/admins/${adminId}`).then(res => res)
 	}
 }
 export class Location {
 	static async getMyLocations() {
-		return await fetchData.get('/admin/location').then(res => res)
+		return await fetchData.get('/admins/locations').then(res => res)
 	}
 	static async getLocations() {
-		return await fetchData.get('/location/list').then(res => res)
+		return await fetchData.get('/locations').then(res => res)
 	}
 	static async getLocation(id: number) {
-		return await fetchData.get(`/location/${id}`).then(res => res)
+		return await fetchData.get(`/locations/${id}`).then(res => res)
 	}
 	static async getAdminLocations(adminId: number) {
-		return await fetchData.get(`/admin/${adminId}/location`).then(res => res)
+		return await fetchData.get(`/admins/${adminId}/locations`).then(res => res)
 	}
 	static async addLocation(data: locationCreateData) {
-		return await fetchData.post('/location', data).then(res => res)
+		return await fetchData.post('/locations/create', data).then(res => res)
 	}
 	static async addAdminToLocation(adminId: number, locationId: number) {
 		return await fetchData
-			.post(`/admin/${adminId}/location/${locationId}`)
+			.post(`/admins/${adminId}/locations/${locationId}`)
 			.then(res => res)
 	}
 
 	static async updateLocation(locationId: number, data: locationCreateData) {
 		return await fetchData
-			.patch(`/location/${locationId}`, data)
+			.patch(`/locations/${locationId}`, data)
 			.then(res => res)
 	}
 	static async deleteAdminFromLocation(adminId: number, locationId: number) {
 		return await fetchData
-			.delete(`/admin/${adminId}/location/${locationId}`)
+			.delete(`/admins/${adminId}/locations/${locationId}`)
 			.then(res => res)
 	}
 	static async deleteLocation(locationId: number) {
-		return await fetchData.delete(`/location/${locationId}`).then(res => res)
+		return await fetchData.delete(`/locations/${locationId}`).then(res => res)
 	}
 	static async deleteGameFromLocation(locationId: number, gameId: number) {
 		return await fetchData
-			.delete(`/location/${locationId}/game/${gameId}`)
+			.delete(`/locations/${locationId}/games/${gameId}`)
 			.then(res => res)
 	}
 }
 export class Game {
 	static async getLocationsGames(locationId: number) {
-		return await fetchData.get(`/location/${locationId}/game`).then(res => res)
+		return await fetchData
+			.get(`/locations/${locationId}/games`)
+			.then(res => res)
 	}
 	static async getLocationGameById(locationId: number, gameId: number) {
 		return await fetchData
-			.get(`/location/${locationId}/game/${gameId}`)
+			.get(`/locations/${locationId}/games/${gameId}`)
 			.then(res => res)
 	}
 	static async addGameToLocation(locationId: number, data: FormData) {
 		return await fetchData
-			.post(`/location/${locationId}/game`, data, {
+			.post(`/locations/${locationId}/games`, data, {
 				headers: { 'Content-Type': 'multipart/form-data' },
 			})
 			.then(res => res)
 	}
 	static async deleteGameFromLocation(locationId: number, gameId: number) {
 		return await fetchData
-			.delete(`/location/${locationId}/game/${gameId}`)
+			.delete(`/locations/${locationId}/games/${gameId}`)
 			.then(res => res)
 	}
 	static async updateLocationGame(
@@ -110,7 +112,7 @@ export class Game {
 		}
 	) {
 		return await fetchData
-			.patch(`/location/${locationId}/game/${gameId}`, data, {
+			.patch(`/locations/${locationId}/games/${gameId}`, data, {
 				headers: { 'Content-Type': 'multipart/form-data' },
 			})
 			.then(res => res)
@@ -119,7 +121,7 @@ export class Game {
 export class Room {
 	static async getRooms(locationId: number) {
 		return await fetchData
-			.get(`/room`, {
+			.get(`/rooms`, {
 				params: {
 					locationId,
 				},
@@ -128,11 +130,33 @@ export class Room {
 	}
 	static async createRoom(locationId: number, gameId: number) {
 		return await fetchData
-			.post(`/room`, { LocationId: locationId, GameId: gameId })
+			.post(`/rooms/create`, { LocationId: locationId, GameId: gameId })
 			.then(res => res)
 	}
 	static async closeRoom(id: number) {
-		return await fetchData.patch(`/room/${id}/close`).then(res => res)
+		return await fetchData.patch(`/rooms/${id}/close`).then(res => res)
+	}
+}
+export class Client {
+	static async getClients() {
+		const cl = await fetchData.get('/clients').then(res => res)
+		console.log(cl)
+		return cl
+	}
+	static async getClient(id: number) {
+		return await fetchData.get(`/clients/${id}`).then(res => res)
+	}
+	static async register(data: {
+		firstName: string
+		lastName: string
+		birthday: string
+		phone: string | null
+		mail: string | null
+	}) {
+		return await fetchData.post('/clients/', data).then(res => res)
+	}
+	static async delete(id: number) {
+		return await fetchData.delete(`/client/${id}`).then(res => res)
 	}
 }
 

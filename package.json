@@ -3,7 +3,9 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@react-pdf/renderer": "^4.3.0",
 		"axios": "^1.8.4",
+		"html2pdf.js": "^0.10.3",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"react-router-dom": "^7.5.0",
@@ -39,5 +41,4 @@
 		"cross-env": "^7.0.3"
 	},
 	"proxy": "http://localhost:8000"
-
 }

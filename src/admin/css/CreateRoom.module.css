@@ -11,15 +11,6 @@ h1, h2 {
 
   overflow: auto;
 }
-.gameList::-webkit-scrollbar {
-  width: 0.5rem;
-  background-color: #333;
-}
-.gameList::-webkit-scrollbar-thumb {
-  background-color: var(--color-orange);
-  border-radius: 10px;
-}
-
 .gameItem {
   display: flex;
   flex-direction: column;

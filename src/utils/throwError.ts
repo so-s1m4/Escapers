@@ -10,14 +10,20 @@ export default function throwError(status: number, message: string) {
   closeBtn.onclick = (e) => {e.stopPropagation(); e.target.parentElement.parentElement.style.display = 'none'}
   closeBtn.innerHTML = `<span className=${css.closeBtnIcon}>&times;</span>`
   errDiv.appendChild(closeBtn)
+
   const h1 = document.createElement("h1")
   h1.innerText = `${status}`
   errDiv.appendChild(h1)
+
   const p = document.createElement("p")
   p.innerText = message
   errDiv.appendChild(p)
-  errWrapper.appendChild(errDiv)
 
+  const line = document.createElement("div")
+  line.className = css.line
+  errDiv.appendChild(line)
+
+  errWrapper.appendChild(errDiv)
   setTimeout(() => {
     errDiv.style.display = "none"
   }, 5000)

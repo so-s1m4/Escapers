@@ -4,8 +4,7 @@ import CreateRoom from './CreateRoom'
 import { Routes, Route } from 'react-router-dom'
 import ComponentWithStore from 'utils/ComponentWithStore'
 import { withRouter } from 'utils/withRouter'
-import historyIcon from "img/history.svg"
-
+import historyIcon from 'img/history.svg'
 
 class Rooms extends ComponentWithStore {
 	constructor(props) {
@@ -46,7 +45,7 @@ class Rooms extends ComponentWithStore {
 				<div
 					style={{
 						display: 'flex',
-						justifyContent: 'space-between',	
+						justifyContent: 'space-between',
 					}}
 				>
 					<div className={css.roomID}>
@@ -99,13 +98,6 @@ class Rooms extends ComponentWithStore {
 		return (
 			<>
 				<div className={css.nav}>
-					<button
-						className={css.addButton}
-						onClick={() => this.props.nav('/admin/rooms/create')}
-					>
-						Create Room
-					</button>
-
 					<div
 						style={{
 							height: '100%',
@@ -117,11 +109,21 @@ class Rooms extends ComponentWithStore {
 					>
 						<div className={css.title}>
 							Rooms{' '}
-							<img onClick={() => {
-								this.setState({ showHistory: !this.state.showHistory })
-
-							}} className={css.historyBtn} src={historyIcon} />
+							<img
+								onClick={() => {
+									this.setState({ showHistory: !this.state.showHistory })
+								}}
+								className={css.historyBtn}
+								src={historyIcon}
+							/>
 						</div>
+
+						<button
+							className={css.addButton}
+							onClick={() => this.props.nav('/admin/rooms/create')}
+						>
+							Create Room
+						</button>
 
 						<div className={css.rooms}>
 							{this.store.state.rooms

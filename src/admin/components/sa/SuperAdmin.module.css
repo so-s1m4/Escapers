@@ -115,13 +115,12 @@
 
 .table {
 	width: 100%;
-
-		height: min-content;
-
+	height: min-content;
 	background: transparent;
 	border-collapse: collapse;
 	justify-content: center;
 }
+
 .table th {	
 	font-size: 1.5rem;
 }

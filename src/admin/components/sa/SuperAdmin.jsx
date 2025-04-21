@@ -40,7 +40,7 @@ function Admins({ store }) {
 			})
 	}
 
-	const updateAdmin = async gameId => {}
+	const updateAdmin = async adminId => {}
 
 	useEffect(() => {
 		const fetchAdmin = async () => {
@@ -172,11 +172,11 @@ function Admins({ store }) {
 												`tr${admin.id}`
 											)
 											elements.forEach(element => {
-												if (!element.disabled) {
-													updateAdmin(admin.id)
-												}
 												element.disabled = !element.disabled
 											})
+											if (elements[0].disabled) {
+												updateAdmin(admin.id)
+											}
 										}}
 									>
 										Edit

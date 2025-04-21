@@ -30,3 +30,12 @@ code {
 	min-width: 30%;
 	gap: 1vh;
 }
+
+div::-webkit-scrollbar {
+  width: 0.5rem;
+  background-color: #333;
+}
+div::-webkit-scrollbar-thumb {
+  background-color: var(--color-orange);
+  border-radius: 10px;
+}
