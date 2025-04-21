@@ -5,6 +5,7 @@ import css from './SuperAdmin.module.css'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { Admin, Game, Location } from 'utils/apiController.ts'
 import { useEffect, useState } from 'react'
+import throwError from 'utils/throwError.ts'
 
 function Admins({ store }) {
 	const [admins, setAdmins] = useState([])
@@ -24,12 +25,9 @@ function Admins({ store }) {
 					).map(option => option.value) || []
 
 				locations.forEach(async locationId => {
-					await Location.addAdminToLocation(res.data.id, locationId).then(
-						res => {
-							if (!res.success) {
-								console.error('Failed to add admin to location')
-								return
-							}
+					await Location.addAdminToLocation(res.data.id, locationId).catch(
+						err => {
+							throwError(err.status, err.response?.data.message || err.message)
 						}
 					)
 				})
@@ -38,7 +36,7 @@ function Admins({ store }) {
 				setUpdate(!update)
 			})
 			.catch(err => {
-				console.error(err)
+				throwError(err.status, err.response?.data.message || err.message)
 			})
 	}
 
@@ -46,23 +44,25 @@ function Admins({ store }) {
 
 	useEffect(() => {
 		const fetchAdmin = async () => {
-			const admins = await Admin.getAdmins().then(res => {
-				if (!res.success) {
-					console.error('Failed to fetch admins')
-					return
-				}
-				let data = res.data
+			const admins = await Admin.getAdmins()
+				.then(res => {
+					let data = res.data
 
-				data = data.map(async admin => {
-					return await Location.getAdminLocations(admin.id).then(res => {
-						admin = { ...admin, locs: Array.from(res.data) }
-						return admin
-					}).catch(err => {
-						console.error(err)
+					data = data.map(async admin => {
+						return await Location.getAdminLocations(admin.id)
+							.then(res => {
+								admin = { ...admin, locs: Array.from(res.data) }
+								return admin
+							})
+							.catch(err => {
+								throwError(err.status, err.response?.data.message || err.message)
+							})
 					})
+					return Promise.all(data)
 				})
-				return Promise.all(data)
-			})
+				.catch(err => {
+					throwError(err.status, err.response?.data.message || err.message)
+				})
 			setAdmins(admins)
 		}
 
@@ -205,7 +205,6 @@ function Admins({ store }) {
 function Games({ store }) {
 	const [games, setGames] = useState([])
 
-
 	const createGame = async () => {
 		const file = document.querySelector('input[name="file"]').files[0]
 
@@ -228,7 +227,7 @@ function Games({ store }) {
 				}
 			})
 			.catch(err => {
-				console.error(err)
+				throwError(err.status, err.response?.data.message || err.message)
 			})
 	}
 	const updateGame = async gameId => {
@@ -240,42 +239,40 @@ function Games({ store }) {
 		}
 
 		Game.updateLocationGame(store.state.curLocation, gameId, {
-			...(file ? {file:file[0]} : {}),
+			...(file ? { file: file[0] } : {}),
 			data: JSON.stringify(data),
 		})
 			.then(res => {
-				console.log(res)
 				if (res.success) {
-
-					Game.getLocationsGames(store.state.curLocation).then(res => {
-						if (!res.success) {
-							console.error('Failed to fetch games')
-							return
-						}
-						store.state.games = res.data
-						setGames(res.data)
-					})
+					Game.getLocationsGames(store.state.curLocation)
+						.then(res => {
+							store.state.games = res.data
+							setGames(res.data)
+						})
+						.catch(err => {
+							throwError(err.status, err.response?.data.message || err.message)
+						})
 					store.state.games = store.state.games.filter(g => 1 == 1)
 					store.setState({ games: store.state.games })
 				}
 			})
 			.catch(err => {
-				console.error(err)
+				throwError(err.status, err.response?.data.message || err.message)
 			})
 	}
 
 	useEffect(() => {
 		const fetchGames = async () => {
 			const response = await Game.getLocationsGames(store.state.curLocation)
-			if (!response.success) {
-				console.error('Failed to fetch games')
-				return
-			}
-			setGames(response.data)
+				.then(res => {
+					setGames(res.data)
+				})
+				.catch(err => {
+					throwError(err.status, err.response?.data.message || err.message)
+				})
 		}
 
 		if (store.state.curLocation) fetchGames()
-			
 	}, [store.state.games, store.state.curLocation])
 
 	return (
@@ -372,12 +369,11 @@ function Games({ store }) {
 												`tr${game.id}`
 											)
 											elements.forEach(element => {
-												
 												element.disabled = !element.disabled
 											})
 											if (elements[0].disabled) {
-													updateGame(game.id)
-												}
+												updateGame(game.id)
+											}
 										}}
 									>
 										Edit
@@ -408,10 +404,9 @@ function Games({ store }) {
 }
 function Locations({ store }) {
 	const [locs, setLocations] = useState([])
-	const [UpdateHandler, update] = useState(false);
+	const [UpdateHandler, update] = useState(false)
 
 	const createLoc = async () => {
-
 		const data = {
 			address: document.querySelector('input[name="address"]').value,
 			city: document.querySelector('input[name="city"]').value,
@@ -431,7 +426,7 @@ function Locations({ store }) {
 				}
 			})
 			.catch(err => {
-				console.error(err)
+				throwError(err.status, err.response?.data.message || err.message)
 			})
 	}
 	const updateLoc = async locId => {
@@ -450,18 +445,19 @@ function Locations({ store }) {
 				}
 			})
 			.catch(err => {
-				console.error(err)
+				throwError(err.status, err.response?.data.message || err.message)
 			})
 	}
 
 	useEffect(() => {
 		const fetchLocs = async () => {
 			const response = await Location.getLocations()
-			if (!response.success) {
-				console.error('Failed to fetch locs')
-				return
-			}
-			setLocations(response.data)
+				.then(res => {
+					setLocations(res.data)
+				})
+				.catch(err => {
+					throwError(err.status, err.response?.data.message || err.message)
+				})
 		}
 
 		fetchLocs()
@@ -583,7 +579,7 @@ function Locations({ store }) {
 														l => l.id !== loc.id
 													)
 													store.setState({
-														myLocations: store.state.myLocations
+														myLocations: store.state.myLocations,
 													})
 													setLocations(locs.filter(l => l.id !== loc.id))
 												}
@@ -608,6 +604,9 @@ class SuperAdmin extends ComponentWithStore {
 	}
 
 	componentDidMount() {
+		if (this.store.state.myInfo && !this.store.state.myInfo.isSuperAdmin) {
+			this.props.nav('/admin')
+		}
 		this.store.register(this)
 	}
 	componentDidUpdate() {

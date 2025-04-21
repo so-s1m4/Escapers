@@ -21,3 +21,12 @@ code {
 	padding: 0;
 	box-sizing: border-box;
 }
+.errors {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 0%;
+	right: 0%;
+	min-width: 30%;
+	gap: 1vh;
+}

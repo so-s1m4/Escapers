@@ -38,7 +38,7 @@ class Room extends ComponentWithStore {
 		}, 300)
 	}
 
-	async componentDidUpdate(prevProps) {
+	async componentDidUpdate(prevProps, prevState) {
 		if (prevProps.params.id !== this.props.params.id) {
 			this.state.roomId = this.props.params.id
 			this.state.room = this.store.state.rooms.find(

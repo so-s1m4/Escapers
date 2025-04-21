@@ -15,7 +15,7 @@ export default class CreateRoom extends ComponentWithStore {
 				<img
 					src={`http://localhost:8000/public/${""+game.icon}`}
 					alt={game.name}
-					style={{ width: '100%', height: 'auto' }}
+					style={{ width: '100%', height: '170px', objectFit: 'cover', objectPosition: 'center' }}
 				/>
 				<div className={css.gameItemContent}>
 					<div
@@ -36,6 +36,7 @@ export default class CreateRoom extends ComponentWithStore {
 					flexDirection: 'column',
 					gap: '1rem',
 					padding: '1rem',
+					height: '100%',
 				}}
 			>
 				<h1>Create Room</h1>

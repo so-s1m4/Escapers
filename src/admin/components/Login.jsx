@@ -2,6 +2,7 @@ import img from "img/logo.png"
 import img2 from "img/gifka.webp"
 import css from 'admin/css/Login.module.css'
 import { Admin } from 'utils/apiController.ts'
+import throwError from "utils/throwError.ts"
 
 export default function Login() {
 	const handleSubmit = async e => {
@@ -19,7 +20,7 @@ export default function Login() {
 				}
 			})
 			.catch(err => {
-				console.error(err)
+				throwError(err.status, err.response?.data.message || err.message)
 			})
 	}
 	return (

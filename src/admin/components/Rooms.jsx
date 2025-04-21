@@ -24,7 +24,7 @@ class Rooms extends ComponentWithStore {
 	}
 
 	roomTemplate(room) {
-		const game = this.state.games.find(g => g.id == room.GameId)
+		const game = this.state.games?.find(g => g.id == room.GameId)
 		if (!game) return null
 
 		return (
@@ -124,7 +124,7 @@ class Rooms extends ComponentWithStore {
 						</div>
 
 						<div className={css.rooms}>
-							{this.state.rooms
+							{this.store.state.rooms
 								?.filter(room => {
 									return this.state.showHistory || room.isActivate
 								})
@@ -137,7 +137,6 @@ class Rooms extends ComponentWithStore {
 				</div>
 				<div className={css.content}>
 					<Routes>
-						<Route path='/' />
 						<Route path=':id' element={<Room />} />
 						<Route path='create' element={<CreateRoom />} />
 					</Routes>
