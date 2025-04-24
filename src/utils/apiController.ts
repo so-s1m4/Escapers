@@ -39,7 +39,7 @@ export class Admin {
 }
 export class Location {
 	static async getMyLocations() {
-		return await fetchData.get('/admins/locations').then(res => res)
+		return await fetchData.get('/admins/me/locations').then(res => res)
 	}
 	static async getLocations() {
 		return await fetchData.get('/locations').then(res => res)
@@ -51,7 +51,7 @@ export class Location {
 		return await fetchData.get(`/admins/${adminId}/locations`).then(res => res)
 	}
 	static async addLocation(data: locationCreateData) {
-		return await fetchData.post('/locations/create', data).then(res => res)
+		return await fetchData.post('/locations', data).then(res => res)
 	}
 	static async addAdminToLocation(adminId: number, locationId: number) {
 		return await fetchData
@@ -119,18 +119,14 @@ export class Game {
 	}
 }
 export class Room {
-	static async getRooms(locationId: number) {
+	static async getRoomsOnLocation(locationId: number) {
 		return await fetchData
-			.get(`/rooms`, {
-				params: {
-					locationId,
-				},
-			})
+			.get(`/locations/${locationId}/rooms`)
 			.then(res => res)
 	}
 	static async createRoom(locationId: number, gameId: number) {
 		return await fetchData
-			.post(`/rooms/create`, { LocationId: locationId, GameId: gameId })
+			.post(`/rooms`, { LocationId: locationId, GameId: gameId })
 			.then(res => res)
 	}
 	static async closeRoom(id: number) {
@@ -140,23 +136,26 @@ export class Room {
 export class Client {
 	static async getClients() {
 		const cl = await fetchData.get('/clients').then(res => res)
-		console.log(cl)
 		return cl
 	}
 	static async getClient(id: number) {
 		return await fetchData.get(`/clients/${id}`).then(res => res)
 	}
-	static async register(data: {
+	static async register(file: File, data: {
 		firstName: string
 		lastName: string
 		birthday: string
 		phone: string | null
 		mail: string | null
 	}) {
-		return await fetchData.post('/clients/', data).then(res => res)
+		return await fetchData
+			.post('/clients/', {file, data: JSON.stringify(data)}, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			})
+			.then(res => res)
 	}
 	static async delete(id: number) {
-		return await fetchData.delete(`/client/${id}`).then(res => res)
+		return await fetchData.delete(`/clients/${id}`).then(res => res)
 	}
 }
 

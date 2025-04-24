@@ -38,7 +38,7 @@
 	font-size: 1.2em;
 	outline: none;
 
-	border-radius: 2rem;
+	border-radius: 0;
 
 	font-weight: bold;
 }
@@ -65,7 +65,7 @@
 }
 .room {
 	width: 100%;
-	border-radius: 10px;
+	border-radius: 0px;
 	border: 1px solid;
 }
 .roomCode > b {

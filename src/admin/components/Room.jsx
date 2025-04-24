@@ -1,6 +1,7 @@
 import ComponentWithStore from 'utils/ComponentWithStore'
 import { Admin, Room as RoomAPI } from 'utils/apiController.ts'
 import { withRouter } from 'utils/withRouter'
+import throwError from 'utils/throwError.ts'
 import css from 'admin/css/Room.module.css'
 
 class Room extends ComponentWithStore {
@@ -25,29 +26,34 @@ class Room extends ComponentWithStore {
 
 		await RoomAPI.closeRoom(this.state.roomId)
 	}
-	update() {
-		this.state.room = this.store.state.rooms?.find(
+	async update() {
+		const room = this.store.state.rooms?.find(
 			room => room.id == this.state.roomId
 		)
-		this.setState({ room: this.state.room })
+		if (!room) {
+			setTimeout(() => {
+				this.update()
+			}, 300)
+			return
+		} else {
+			await Admin.getAdmin(room.AdminId)
+				.then(res =>
+					this.setState({ room: { ...room, admin: res.data.username } })
+				)
+				.catch(err => {
+					throwError(err.response.status, err.response.data.message)
+				})
+		}
 	}
 	componentDidMount() {
 		this.store.register(this)
-		setTimeout(() => {
-			this.update()
-		}, 300)
+		this.update()
 	}
 
 	async componentDidUpdate(prevProps, prevState) {
 		if (prevProps.params.id !== this.props.params.id) {
 			this.state.roomId = this.props.params.id
-			this.state.room = this.store.state.rooms.find(
-				room => room.id == this.state.roomId
-			)
-			this.state.room.admin = await Admin.getAdmin(
-				this.state.room.AdminId
-			).then(res => res.data.username)
-			this.setState({ room: this.state.room })
+			this.update()
 		}
 	}
 

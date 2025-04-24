@@ -12,6 +12,7 @@
 	padding: 0 2rem; 
 }
 
+
 .navList {
 	width: auto;
 	gap: 2rem;
@@ -31,7 +32,7 @@
 	text-decoration: none;
 	font-size: 1.5vw;
 	transition: all 0.3s ease-in-out;
-	border-radius: 0.5rem;
+	border-radius: 0;
 
 	cursor: pointer;
 
@@ -42,7 +43,20 @@
 	font-weight: 600;
 }
 .navList > select {
-	border: 1px solid;
+	background: transparent;
+	border: 1px solid ;
+	color: var(--color-orange);
+	font-size: 1.5vw;
+	transition: all 0.3s ease-in-out;
+	border-radius: 0;
+
+	cursor: pointer;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	font-weight: 600;
 }
 
 .navList > *:hover {

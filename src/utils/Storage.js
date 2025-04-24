@@ -16,7 +16,7 @@ class Store {
 		}
 		let [games, rooms] = await Promise.all([
 			Game.getLocationsGames(newState.curLocation),
-			Room.getRooms(newState.curLocation),
+			Room.getRoomsOnLocation(newState.curLocation),
 		])
 		rooms = rooms.data
 		rooms.reverse()
@@ -35,7 +35,7 @@ class Store {
 
 	async getRooms() {
 		if (this.state.rooms) return this.state.rooms
-		const rooms = await Room.getRooms(this.state.curLocation)
+		const rooms = await Room.getRoomsOnLocation(this.state.curLocation)
 		rooms = rooms.data
 		this.setState({ rooms })
 		return rooms.data

@@ -1,9 +1,10 @@
-
 .error {
 	position: relative;
 	min-width: fit-content;
-	height: 10vh;
-	background: rgba(255,0,0,.7);
+	max-width: 50vw;
+	flex-wrap: wrap;
+	max-height: 30vh;
+	background: rgba(255, 0, 0, 0.7);
 	border-radius: 5px;
 	padding: 10px;
 	color: white;
@@ -14,6 +15,8 @@
 	animation: fadeIn 0.5s ease-in-out;
 	animation-fill-mode: forwards;
 	animation-delay: 0.5s;
+
+	z-index: 100000;
 }
 .closeBtn {
 	position: absolute;
