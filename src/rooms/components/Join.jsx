@@ -26,6 +26,7 @@ class Join extends ComponentWithStore {
 		await Room.isRoomOpen(roomCode).then(res => {
 			console.log(res.success)
 			if (res.success) {
+				sessionStorage.setItem('roomCode', res.id)
 				this.props.nav('/rooms/join/' + res.id)
 			}
 		}).catch(err=>{

@@ -139,14 +139,15 @@ export class Room {
 	static async addClientToRoom(
 		roomId: number,
 		clientId: number,
+		file: File,
 		password: string | null
 	) {
 		console.log(img)
 		const data = {
-			file: img
+			file
 		}
 		return await fetchData
-			.post(`/rooms/${roomId}/clients/${clientId}`, data, { headers: { 'Content-Type': 'multipart/form-data' } })
+			.post(`/rooms/${roomId}/clients/${clientId}`, data, { params: { password }, headers: { 'Content-Type': 'multipart/form-data' } })
 			.then(res => res)
 	}
 
@@ -160,8 +161,8 @@ export class Client {
 		const cl = await fetchData.get('/clients').then(res => res)
 		return cl
 	}
-	static async getClient(id: number) {
-		return await fetchData.get(`/clients/${id}`).then(res => res)
+	static async getClient(id: number, password: string | null) {
+		return await fetchData.get(`/clients/${id}`, { params: { password } }).then(res => res)
 	}
 	static async register(
 		file: File,

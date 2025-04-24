@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const IP = '192.168.61.229'
 const PORT = '8000'
-const BASE_URL = `http://${IP}:${PORT}`
+export const BASE_URL = `http://${IP}:${PORT}`
 
 const api = axios.create({
 	baseURL: `${BASE_URL}/api`,
