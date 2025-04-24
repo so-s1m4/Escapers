@@ -31,7 +31,7 @@
 	width: 85%;
 	height: 100%;
 	background: #111;
-	padding: 0 1%;
+	padding: 0 auto;
 	overflow: auto;
 	position: relative;
 	display: flex;
@@ -41,7 +41,7 @@
 }
 
 .table {
-	width: 100%;
+	width: 90%;
 	border-collapse: collapse;
 	margin-top: 3%;
 }
@@ -57,7 +57,6 @@
 	height: 5vh;
 }
 
-
 .table tbody {
 	overflow: scroll;
 }
@@ -68,15 +67,20 @@
 .table th {
 	background-color: #111;
 	color: var(--color-orange);
-	font-size: 1.5rem;
+	font-size: 1rem;
 	padding: 0.5rem 1rem;
 	text-align: left;
 
 	border: 1px solid var(--color-orange);
 }
-
 .table td {
 	width: fit-content;
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--color-orange);
+	color: white;
+	font-weight: bold;
+
+	font-size: 1rem;
 }
 .table td img {
 	width: 25px;
@@ -86,7 +90,8 @@
 }
 
 .trash:hover {
-	filter: brightness(0) saturate(100%) invert(34%) sepia(97%) saturate(6340%) hue-rotate(354deg) brightness(102%) contrast(139%);
+	filter: brightness(0) saturate(100%) invert(34%) sepia(97%) saturate(6340%)
+		hue-rotate(354deg) brightness(102%) contrast(139%);
 }
 
 .filters {
@@ -104,7 +109,7 @@
 	background: transparent;
 	color: var(--color-orange);
 	padding-left: 0.5rem;
-	font-size: 1.5rem;
+	font-size: 1rem;
 }
 
 .inputField:focus {
@@ -148,11 +153,11 @@
 	background: 0;
 	border: 1px solid var(--color-orange);
 	color: var(--color-orange);
-	
+
 	font-size: 1.25rem;
 
 	font-weight: bolder;
-	transition: all .25s ease-in-out;
+	transition: all 0.25s ease-in-out;
 }
 .createBtn:hover {
 	background: var(--color-orange);
@@ -168,5 +173,4 @@
 
 	width: 48.5%;
 	font-size: 1.5rem;
-	
 }

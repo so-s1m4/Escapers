@@ -147,38 +147,41 @@
 	width: 100%;
 	border-collapse: collapse;
 }
-thead,
-thead > tr {
+ thead,
+ thead > tr {
 	position: sticky;
 }
-thead > tr > th {
+ thead > tr > th {
 	color: var(--color-orange);
 	font-size: 2rem;
 
 	border: 1px solid var(--color-orange);
 }
-tbody > tr > td {
+ tbody > tr > td {
 	color: white;
 	font-size: 1.25rem;
 }
-thead > tr > th,
-tbody > tr > td {
+ thead > tr > th,
+ tbody > tr > td {
 	border-left: 1px solid var(--color-orange);
 	border-right: 1px solid var(--color-orange);
 	text-align: center;
 }
+td img {
+	cursor: pointer;
+}
 
 tbody,
-tr {
+ tr {
 	border-bottom: 1px solid var(--color-orange);
 }
 
-td,
-th {
+ td,
+ th {
 	padding: 1rem;
 }
 
-tbody {
+ tbody {
 	overflow: auto;
 }
 
@@ -199,4 +202,15 @@ tbody {
 		width: fit-content;
 		padding: .5rem 1rem;
 	}
+}
+.inputField {
+	width: 10vw;
+	background: transparent;
+	border: 0;
+	border-bottom: 1px solid var(--color-orange);
+	border-radius: 0;
+	outline: 0;
+
+	color: var(--color-orange);
+	font-size: 1.5rem;
 }

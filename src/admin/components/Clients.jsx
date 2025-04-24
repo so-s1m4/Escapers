@@ -275,6 +275,7 @@ export default function Clients() {
 													color: 'var(--color-orange)',
 													border: '1px solid var(--color-orange)',
 													borderRadius: 4,
+													fontSize: 16,
 												}}
 											>
 												{({ loading }) =>

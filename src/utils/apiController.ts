@@ -1,4 +1,5 @@
 import fetchData from './fetchData.ts'
+import img from 'img/logo.png'
 
 type adminCreateData = {
 	firstName: string
@@ -132,6 +133,27 @@ export class Room {
 	static async closeRoom(id: number) {
 		return await fetchData.patch(`/rooms/${id}/close`).then(res => res)
 	}
+	static async isRoomOpen(code: number) {
+		return await fetchData.get(`/rooms/code/${code}/`).then(res => res)
+	}
+	static async addClientToRoom(
+		roomId: number,
+		clientId: number,
+		password: string | null
+	) {
+		console.log(img)
+		const data = {
+			file: img
+		}
+		return await fetchData
+			.post(`/rooms/${roomId}/clients/${clientId}`, data, { headers: { 'Content-Type': 'multipart/form-data' } })
+			.then(res => res)
+	}
+
+	static async getClientsInRoom(roomId: number) {
+		return await fetchData
+			.get(`/rooms/${roomId}/clients`).then(res => res)
+	}
 }
 export class Client {
 	static async getClients() {
@@ -141,17 +163,24 @@ export class Client {
 	static async getClient(id: number) {
 		return await fetchData.get(`/clients/${id}`).then(res => res)
 	}
-	static async register(file: File, data: {
-		firstName: string
-		lastName: string
-		birthday: string
-		phone: string | null
-		mail: string | null
-	}) {
+	static async register(
+		file: File,
+		data: {
+			firstName: string
+			lastName: string
+			birthday: string
+			phone: string | null
+			mail: string | null
+		}
+	) {
 		return await fetchData
-			.post('/clients/', {file, data: JSON.stringify(data)}, {
-				headers: { 'Content-Type': 'multipart/form-data' },
-			})
+			.post(
+				'/clients/',
+				{ file, data: JSON.stringify(data) },
+				{
+					headers: { 'Content-Type': 'multipart/form-data' },
+				}
+			)
 			.then(res => res)
 	}
 	static async delete(id: number) {

@@ -1,157 +1,68 @@
 import React, { useRef } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Webcam from 'react-webcam'
+import arrow from 'img/arrow-right.svg'
 
 import css from 'rooms/css/RegisterForm.module.css'
 
-function RegFormStart({ state }) {
+function Daten({ state }) {
 	const webRef = useRef(null)
 
 	console.log(state)
 
 	return (
-		<div className={css.wrapper}>
+		<div className={css.wrapper} style={{ padding: '1rem' }}>
 			<>
-				<h2>Register</h2>
+				<h2>Einverständniserklärung</h2>
 				<form
 					action='submit'
 					style={{
 						display: 'flex',
 						flexDirection: 'column',
 						gap: '2rem',
-						padding: '0 1rem',
 					}}
 				>
-					<div
-						style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
-					>
-						<div className={css.inline} style={{ gap: '2rem' }}>
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-									gap: '2rem',
-									width: '100%',
-								}}
-							>
-								{state.state.image ? (
-									<img
-										src={state.state.image}
-										alt='Preview'
-										style={{
-											maxWidth: window.innerWidth * 0.37,
-											height: window.innerHeight * 0.25,
-											objectFit: 'cover',
-											imageResolution: 'from-image',
-											imageRendering: 'pixelated',
-											objectPosition: 'center',
-											borderRadius: '1rem',
-											border: '2px solid var(--color-orange)',
-										}}
-									/>
-								) : (
-									<Webcam
-										ref={webRef}
-										audio={false}
-										screenshotFormat='image/jpeg'
-										imageSmoothing={true}
-										zoom={10}
-										screenshotQuality={1}
-										style={{
-											display: 'flex',
-											justifyContent: 'flex-start',
-											alignItems: 'flex-start',
-											width: 'fit-content',
-											maxWidth: window.innerWidth * 0.37,
-											height: '25svh',
-											borderRadius: '1rem',
-											border: '2px solid var(--color-orange)',
-										}}
-									/>
-								)}
-							</div>
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-									gap: '2rem',
-									width: '100%',
-								}}
-							>
-								<div className={css.inputWrapper}>
-									<div className={css.inputTitle}>First Name</div>
-									<input type='text' required name='firstName' />
-								</div>
-								<div className={css.inputWrapper}>
-									<div className={css.inputTitle}>Last Name</div>
-									<input type='text' required name='lastName' />
-								</div>
-								<div className={css.inputWrapper}>
-									<div className={css.inputTitle}>Birthday</div>
-									<input type='date' required name='birthday' />
-								</div>
-							</div>
+					<div className={css.inline} style={{ gap: '2rem' }}>
+						<div className={css.inputWrapper}>
+							<div className={css.inputTitle}>First Name *</div>
+							<input type='text' required name='firstName' />
 						</div>
-						<div className={css.inline} style={{ gap: '2rem' }}>
-							{state.state.image ? (
-								<button
-									className={css.btn}
-									type='button'
-									onClick={() => {
-										state.setState({ image: null })
-									}}
-								>
-									Make another one
-								</button>
-							) : (
-								<button
-									className={css.btn}
-									type='button'
-									onClick={() => {
-										const image = {
-											image: webRef.current.getScreenshot({
-												width: 3456,
-												height: 4608,
-											}),
-										}
-										state.setState(image)
-									}}
-								>
-									Take a picture
-								</button>
-							)}
-
-							<div className={css.inputWrapper}>
-								<div className={css.inputTitle}>Phone</div>
-								<input
-									type='phone'
-									placeholder='+43 123 456 789'
-									required
-									name='phone'
-								/>
-							</div>
-						</div>
-						<div className={css.inline} style={{ gap: '2rem' }}>
-							<div className={css.inputWrapper}>
-								<div className={css.inputTitle}>Email</div>
-								<input
-									type='email'
-									placeholder='example@gmail.com'
-									required
-									name='email'
-								/>
-							</div>
+						<div className={css.inputWrapper}>
+							<div className={css.inputTitle}>Last Name *</div>
+							<input type='text' required name='lastName' />
 						</div>
 					</div>
+					<div className={css.inputWrapper}>
+						<div className={css.inputTitle}>Birthday *</div>
+						<input type='date' required name='birthday' />
+					</div>
+					<div className={css.inputWrapper}>
+						<div className={css.inputTitle}>Phone</div>
+						<input
+							type='phone'
+							placeholder='+43123456789'
+							name='phone'
+						/>
+					</div>
+					<div className={css.inputWrapper}>
+						<div className={css.inputTitle}>Email</div>
+						<input
+							type='email'
+							placeholder='example@gmail.com'
+							name='email'
+						/>
+					</div>
+					<h5 style={{ marginTop: '-1.5rem' }}>* Pflichtfeld</h5>
 
-					<button className={css.btn}>Register</button>
+					<button className={css.btn}>
+						Weiter <img src={arrow}></img>
+					</button>
 				</form>
+				<h4>
+					Haben Sie bereits einen Pass? <a>Anmelden</a>
+				</h4>
 			</>
 		</div>
 	)
-}
-function RegFormStep() {
-	return <h2>Register Form step</h2>
 }
 
 class RegisterForm extends React.Component {
@@ -170,8 +81,8 @@ class RegisterForm extends React.Component {
 	render() {
 		return (
 			<Routes>
-				<Route path='/' element={<RegFormStart state={this} />} />
-				<Route path='/form' element={<RegFormStep state={this} />} />
+				<Route path='/' element={<Daten state={this.state} />} />
+				<Route path='/form' element={null} />
 			</Routes>
 		)
 	}

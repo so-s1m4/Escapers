@@ -7,6 +7,7 @@ import Rooms from './components/Rooms'
 import Clients from './components/Clients'
 import SuperAdmin from './components/sa/SuperAdmin'
 import { store } from 'utils/Storage'
+import { Navigate } from 'react-router-dom'
 export default function Router() {
 	const nav = useNavigate()
 	if (localStorage.getItem('token') == null) {
@@ -20,7 +21,7 @@ export default function Router() {
 				<Route path='/clients/*' element={<Clients />} />
 				<Route path='/bookings/*' element={<h2>Bookings</h2>} />
 				<Route path='/sa/*' element={<SuperAdmin />} />
-				<Route path='*' element={<NotFound />} />
+				<Route path='*' element={<Navigate to="/admin/rooms" />} />
 			</Routes>
 		</Layout>
 	)

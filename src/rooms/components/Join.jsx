@@ -3,12 +3,15 @@ import React from 'react'
 
 import css from 'rooms/css/Join.module.css'
 import ComponentWithStore from 'utils/ComponentWithStore'
+import { Room } from 'utils/apiController.ts'
+
 class Join extends ComponentWithStore {
 	constructor(props) {
 		super(props)
 		this.state = {
 			code: [null, null, null, null],
 		}
+		const checkRoomCode = this.checkRoomCode.bind(this)
 	}
 
 	focusNextInput = index => {
@@ -18,6 +21,22 @@ class Join extends ComponentWithStore {
 		}
 	}
 
+	async checkRoomCode() {
+		const roomCode = this.state.code.join('')
+		await Room.isRoomOpen(roomCode).then(res => {
+			console.log(res.success)
+			if (res.success) {
+				this.props.nav('/rooms/join/' + res.id)
+			}
+		}).catch(err=>{
+			if (err.status == 404) {
+				this.setState({ code: [null, null, null, null] })
+				this.focusNextInput(0)
+			}
+		})
+		
+
+	}
 	changeValue(e, index) {
 		if (e.key == 'Backspace') {
 			this.state.code[index] = null
@@ -26,6 +45,7 @@ class Join extends ComponentWithStore {
 		}
 		if (e.key * 1 > 0 && e.key * 1 < 10) {
 			this.state.code[index] = parseInt(e.key)
+			this.state.code[index] = parseInt(""+this.state.code[index])
 			this.setState({ code: this.state.code })
 			this.focusNextInput(index + 1)
 		}
@@ -36,11 +56,7 @@ class Join extends ComponentWithStore {
 		}
 
 		if (!this.state.code.includes(null) && index == 3) {
-			const roomCode = this.state.code.join('')
-			const room = this.store.state.rooms.find(room => room.code == roomCode)
-			if (room && room.active) {
-				this.props.nav(`/rooms/join/${this.state.code.join('')}`)
-			}
+			this.checkRoomCode()
 		}
 	}
 
