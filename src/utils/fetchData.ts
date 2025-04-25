@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const IP = 'projects.vps.webdock.cloud'
 const PORT = '8000'
-export const BASE_URL = `https://${IP}:${PORT}`
+export const BASE_URL = `https://${IP}:${PORT}/api`
 
 const api = axios.create({
 	baseURL: `${BASE_URL}/api`,
