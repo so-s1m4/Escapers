@@ -1,21 +1,38 @@
 import ComponentWithStore from 'utils/ComponentWithStore'
 import css from 'admin/css/CreateRoom.module.css'
 import { Room } from 'utils/apiController.ts'
+import { withRouter } from 'utils/withRouter'
+import throwError from 'utils/throwError.ts'
 
-export default class CreateRoom extends ComponentWithStore {
+export class CreateRoom extends ComponentWithStore {
 	async createRoom(gameId) {
 		const room = await Room.createRoom(this.state.curLocation, gameId)
-		this.store.setState({ rooms: [...this.state.rooms, room.data] })
+			.then(res => {
+				this.store.setState({ rooms: [...this.state.rooms, res.data] })
+				this.props.nav('/admin/rooms/' + res.data.id)
+			})
+			.catch(err => {
+				throwError(400, err.response.data.message)
+			})
 	}
 
 	gameTemplate(game) {
 		console.log(game.icon)
 		return (
-			<div key={game.id} className={css.gameItem} onClick={() => this.createRoom(game.id)}>
+			<div
+				key={game.id}
+				className={css.gameItem}
+				onClick={() => this.createRoom(game.id)}
+			>
 				<img
-					src={`http://localhost:8000/public/${""+game.icon}`}
+					src={`http://localhost:8000/public/${'' + game.icon}`}
 					alt={game.name}
-					style={{ width: '100%', height: '170px', objectFit: 'cover', objectPosition: 'center' }}
+					style={{
+						width: '100%',
+						height: '170px',
+						objectFit: 'cover',
+						objectPosition: 'center',
+					}}
 				/>
 				<div className={css.gameItemContent}>
 					<div
@@ -48,3 +65,5 @@ export default class CreateRoom extends ComponentWithStore {
 		)
 	}
 }
+
+export default withRouter(CreateRoom)

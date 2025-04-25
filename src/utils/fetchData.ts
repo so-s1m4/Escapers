@@ -1,7 +1,7 @@
 // src/lib/axios.js
 import axios from 'axios'
 
-const IP = '192.168.61.229'
+const IP = '172.21.53.79'
 const PORT = '8000'
 export const BASE_URL = `http://${IP}:${PORT}`
 

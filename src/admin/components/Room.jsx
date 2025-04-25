@@ -86,30 +86,6 @@ class Room extends ComponentWithStore {
 						)}
 					</div>
 					<div className={css.buttonsWrapper}>
-						<input
-							className={css.inputField}
-							placeholder='ID'
-							id='addPlayerInput'
-						/>
-						<button
-							className={css.addButton}
-							disabled={!this.state.room.isActivate}
-							onClick={async () => {
-								const input = document.getElementById('addPlayerInput')
-								if (!input.value) return
-								await RoomAPI.addClientToRoom(
-									this.state.roomId,
-									input.value,
-									null,
-								).then(res => {
-									this.update()
-								}).catch(err => {
-									throwError(err.status, err.response.data.message)
-								})
-							}}
-						>
-							Add Client
-						</button>
 						<button
 							className={css.closeButton}
 							disabled={!this.state.room.isActivate}
