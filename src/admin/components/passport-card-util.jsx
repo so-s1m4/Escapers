@@ -38,7 +38,31 @@ const passStyles = StyleSheet.create({
 		fontSize: 12,
 		color: '#2a87bd',
 		fontWeight: 'bold',
-		marginBottom: mm2pt(4),
+		marginBottom: mm2pt(4.5),
+	},
+	photo: {
+		position: 'absolute',
+		top: 29,
+		left: 22,
+		width: 62,
+		height: 90,
+		objectFit: 'cover',
+	},
+	qcode: {
+		position: 'absolute',
+		top: 41,
+		left: 129,
+		width: 93,
+		height: 93,
+		objectFit: 'cover',
+	},
+	password: {
+		position: 'absolute',
+		top: 65,
+		left: 26,
+		fontSize: 12,
+		color: '#2a87bd',
+		fontWeight: 'bold',
 	},
 })
 const formularStyles = StyleSheet.create({
@@ -52,6 +76,12 @@ const formularStyles = StyleSheet.create({
 export const PassportCardDocument = data => (
 	<Document>
 		<Page size={PageSizes.PASSPORT_CARD} style={passStyles.page}>
+			<View>
+				<Image
+					src={BASE_URL + '/public/' + data.photo}
+					style={passStyles.photo}
+				/>
+			</View>
 			<View style={passStyles.overlayContainer}>
 				<Text style={passStyles.text}>{data.name}</Text>
 				<Text style={passStyles.text}>{data.idNumber}</Text>
@@ -59,9 +89,18 @@ export const PassportCardDocument = data => (
 			</View>
 			<Image src={data.backgroundUrl} style={passStyles.background} />
 		</Page>
+		<Page size={PageSizes.PASSPORT_CARD} style={passStyles.page}>
+			<View>
+				<Image src={data.qr} style={passStyles.qcode} />
+			</View>
+			<Text style={passStyles.password}>{data.password}</Text>
+			<Image src={data.backgroundUrl2} style={passStyles.background} />
+		</Page>
 	</Document>
 )
 export const FormularDocument = data => {
+	if (!data) return null
+	if (!data.clients) return null
 	return (
 		<Document>
 			<Page
@@ -264,7 +303,7 @@ export const FormularDocument = data => {
 				<Text style={formularStyles.text}>Wir als Teil des Teams:</Text>
 
 				{data.clients.map((client, index) => (
-					<View>
+					<View key={index}>
 						<View
 							style={{
 								display: 'flex',
@@ -273,7 +312,6 @@ export const FormularDocument = data => {
 								position: 'relative',
 								paddingLeft: mm2pt(20),
 							}}
-							key={index}
 						>
 							<Text
 								style={{
@@ -290,10 +328,9 @@ export const FormularDocument = data => {
 									BASE_URL + '/public/' + client.RoomsClients.clientSignature
 								}
 								style={{
-									width: mm2pt(30),
+									width: mm2pt(20),
 									height: mm2pt(20),
-									objectFit: 'cover',
-									objectPosition: 'center',
+									objectFit: 'fill',
 									position: 'absolute',
 									left: 0,
 									bottom: -10,
@@ -307,18 +344,14 @@ export const FormularDocument = data => {
 					</View>
 				))}
 
-				{Array(8 - data.clients.length)
-					.fill(
-						<>
-							<Text style={formularStyles.text}>{'_'.repeat(80)}</Text>
-							<Text style={{ ...formularStyles.text }}>
-								(Unterschrift, vollständiger Name, Geburtsdatum, Telefonnummer)
-							</Text>
-						</>
-					)
-					.map((item, index) => {
-						return item
-					})}
+				{Array.from({ length: 8 - data.clients.length }, (_, i) => (
+					<View key={`blank-${i}`}>
+						<Text style={formularStyles.text}>{'_'.repeat(80)}</Text>
+						<Text style={formularStyles.text}>
+							(Unterschrift, vollständiger Name, Geburtsdatum, Telefonnummer)
+						</Text>
+					</View>
+				))}
 				<Text style={formularStyles.text}>
 					Bei minderjährigen Teilnehmern (unter 16 Jahren zum Zeitpunkt des
 					Spiels) kommt der Vertrag nach österreichischem Recht durch die Eltern

@@ -25,6 +25,17 @@ function Register({ state, comp }) {
 						comp.setState({ step: 2 })
 					}}
 				>
+					<div className={css.inputWrapper}>
+						<div className={css.inputTitle}>Photo</div>
+						<input
+							type='file'
+							required
+							name='photo'
+							onChange={e => {
+								comp.setState({ photo: e.target.files[0] })
+							}}
+						/>
+					</div>
 					<div className={css.inline} style={{ gap: '2rem' }}>
 						<div className={css.inputWrapper}>
 							<div className={css.inputTitle}>First Name *</div>
@@ -416,6 +427,25 @@ function Signature({ state, comp }) {
 		</div>
 	)
 }
+function Success() {
+	localStorage.removeItem('roomCode')
+	return (
+		<div
+			style={{
+				width: '100%',
+				height: '100%',
+				background: '#111',
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'center',
+				alignItems: 'center',
+			}}
+		>
+			<div style={{ fontSize: '10vh' }}>✔️</div>
+			<h2 style={{ fontSize: '7vh' }}>Erfolgreich</h2>
+		</div>
+	)
+}
 
 class RegisterForm extends React.Component {
 	constructor(props) {
@@ -429,7 +459,7 @@ class RegisterForm extends React.Component {
 			code: '',
 			password: '',
 			check: false,
-			step: 1,
+			step: 0,
 			signatureBase64: null,
 		}
 		this.handleSignatureChange = this.handleSignatureChange.bind(this)
@@ -481,7 +511,7 @@ class RegisterForm extends React.Component {
 				data.mail = this.state.mail
 			}
 
-			Client.register(null, data, sessionStorage.getItem('roomCode'))
+			Client.register(this.state.photo, data, localStorage.getItem('roomCode'))
 				.then(res => {
 					const client = res.data
 					Room.addClientToRoom(
@@ -513,7 +543,7 @@ class RegisterForm extends React.Component {
 			case 3:
 				return <Signature state={this.state} comp={this} />
 			case 4:
-				return <div>Success</div>
+				return <Success />
 			default:
 				break
 		}

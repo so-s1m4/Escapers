@@ -1,5 +1,4 @@
 import fetchData from './fetchData.ts'
-import img from 'img/logo.png'
 
 type adminCreateData = {
 	firstName: string
@@ -152,16 +151,18 @@ export class Room {
 			})
 			.then(res => res)
 	}
-	static async deleteClientFromRoom(
-		roomId: number,
-		clientId: number,
-	) {
+	static async deleteClientFromRoom(roomId: number, clientId: number) {
 		return await fetchData
 			.delete(`/rooms/${roomId}/clients/${clientId}`)
 			.then(res => res)
 	}
 	static async getClientsInRoom(roomId: number) {
 		return await fetchData.get(`/rooms/${roomId}/clients`).then(res => res)
+	}
+	static async updateGameTime(roomId: number, gameTime: number) {
+		return await fetchData
+			.patch(`/rooms/${roomId}`, { gameTime })
+			.then(res => res)
 	}
 }
 export class Client {
@@ -170,7 +171,9 @@ export class Client {
 		return cl
 	}
 	static async getClient(id: number, password: string | null) {
-		return await fetchData.get(`/clients/${id}`, { params: { password } }).then(res => res)
+		return await fetchData
+			.get(`/clients/${id}`, { params: { password } })
+			.then(res => res)
 	}
 	static async register(
 		file,
@@ -194,10 +197,13 @@ export class Client {
 			)
 			.then(res => res)
 	}
-	static async update(id: number, data:{
-		file: File | null
-		data: any
-	}) {
+	static async update(
+		id: number,
+		data: {
+			file: File | null
+			data: any
+		}
+	) {
 		return await fetchData
 			.patch(`/clients/${id}`, data, {
 				headers: { 'Content-Type': 'multipart/form-data' },
@@ -207,6 +213,9 @@ export class Client {
 
 	static async delete(id: number) {
 		return await fetchData.delete(`/clients/${id}`).then(res => res)
+	}
+	static async getRoomsOfClient(id: number, password: string) {
+		return await fetchData.get(`/clients/${id}/rooms`, { params: { password } })
 	}
 }
 

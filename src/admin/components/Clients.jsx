@@ -5,6 +5,8 @@ import { PDFDownloadLink } from '@react-pdf/renderer'
 import { PassportCardDocument } from './passport-card-util'
 import throwError from 'utils/throwError.ts'
 import bg from 'img/passportTemplate.jpg'
+import bg2 from 'img/passportTemplate2.jpg'
+import qr from "img/qr.jpg"
 import pencil from 'img/pencil.svg'
 import trash from 'img/trashcan.svg'
 
@@ -265,8 +267,11 @@ export default function Clients() {
 														day: '2-digit',
 														year: 'numeric',
 													}),
-													
 													backgroundUrl: bg,
+													backgroundUrl2: bg2,
+													photo: client.photo,
+													qr: qr,
+													password: client.password,
 												})}
 												fileName='astronaut-passport-card.pdf'
 												style={{
@@ -279,9 +284,7 @@ export default function Clients() {
 													fontSize: 16,
 												}}
 											>
-												{({ loading }) =>
-													loading ? 'Genera...' : 'Download'
-												}
+												{({ loading }) => (loading ? 'Genera...' : 'Download')}
 											</PDFDownloadLink>
 										</td>
 										<td>

@@ -196,7 +196,9 @@ tbody,
 }
 .buttonsWrapper {
 	width: fit-content;
+	height: 5vh;
 	display: flex;
+	align-items: center;
 	gap: 1rem;
 	* {
 		width: fit-content;

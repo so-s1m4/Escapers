@@ -6,12 +6,15 @@ import { FormularDocument } from './passport-card-util'
 import throwError from 'utils/throwError.ts'
 import css from 'admin/css/Room.module.css'
 import trash from 'img/trashcan.svg'
+import pen from 'img/pencil.svg'
+import { Component } from 'react'
 
 class Room extends ComponentWithStore {
 	constructor(props) {
 		super()
 		this.state = {
-			roomId: props.params.id,
+			isLoading: true,
+			roomId: 0,
 		}
 
 		this.closeIt = this.closeIt.bind(this)
@@ -40,12 +43,14 @@ class Room extends ComponentWithStore {
 			return
 		} else {
 			await Admin.getAdmin(room.AdminId)
-				.then(async res =>
-					await RoomAPI.getClientsInRoom(this.state.roomId).then(
-						res2 => {
-							this.setState({ room: { ...room, admin: res.data.username, clients: res2.data }})
-						}
-					)
+				.then(
+					async res =>
+						await RoomAPI.getClientsInRoom(this.state.roomId).then(res2 => {
+							this.setState({
+								room: { ...room, admin: res.data.username, clients: res2.data },
+								isLoading: false,
+							})
+						})
 				)
 				.catch(err => {
 					throwError(err.response.status, err.response.data.message)
@@ -54,6 +59,7 @@ class Room extends ComponentWithStore {
 	}
 	componentDidMount() {
 		this.store.register(this)
+		this.state.roomId = this.props.params.id
 		this.update()
 	}
 
@@ -65,7 +71,7 @@ class Room extends ComponentWithStore {
 	}
 
 	render() {
-		if (!this.state.room) return null
+		if (this.state.isLoading) return null
 
 		return (
 			<div
@@ -86,6 +92,31 @@ class Room extends ComponentWithStore {
 						)}
 					</div>
 					<div className={css.buttonsWrapper}>
+					  <input
+							id='gameTimeInput'
+							type='number'
+							defaultValue={this.state.room.gameTime}
+						/>
+						<img
+							style={{
+								height: '100%	',
+								objectFit: 'fill',
+								background: 'transparent',
+								border: 'none',
+							}}
+							src={pen}
+							onClick={async e => {
+								const gameTime = document.getElementById('gameTimeInput').value
+								if (gameTime < 0) {
+									throwError(400, 'Game time must be greater than 0')
+									return
+								}
+								RoomAPI.updateGameTime(this.state.roomId, gameTime).then(() =>
+									this.update()
+								)
+							}}
+						/>
+
 						<button
 							className={css.closeButton}
 							disabled={!this.state.room.isActivate}
@@ -152,19 +183,24 @@ class Room extends ComponentWithStore {
 								).maxPlayers
 							}
 						</div>
-						<PDFDownloadLink
-							document={FormularDocument(this.state.room)}
-							fileName='formular.pdf'
-							style={{
-								textDecoration: 'none',
-								padding: '8px 12px',
-								backgroundColor: 'transparent',
-								color: 'var(--color-orange)',
-								border: '2px solid var(--color-orange)',
-							}}
-						>
-							{({ loading }) => (loading ? 'Genera...' : 'Download')}
-						</PDFDownloadLink>
+
+						{
+							<PdfErrorBoundary>
+								<PDFDownloadLink
+									document={FormularDocument(this.state.room)}
+									fileName='formular.pdf'
+									style={{
+										textDecoration: 'none',
+										padding: '8px 12px',
+										backgroundColor: 'transparent',
+										color: 'var(--color-orange)',
+										border: '2px solid var(--color-orange)',
+									}}
+								>
+									{({ loading }) => (loading ? 'Genera...' : 'Download')}
+								</PDFDownloadLink>
+							</PdfErrorBoundary>
+						}
 					</div>
 
 					<div className={css.playersWrapper}>
@@ -177,33 +213,50 @@ class Room extends ComponentWithStore {
 									<th>Birthday</th>
 									<th>Phone</th>
 									<th>Email</th>
-									<th style= {{border: 0}}></th>
+									<th style={{ border: 0 }}></th>
 								</tr>
 							</thead>
 							<tbody>
 								{(() => {
 									return this.state.room.clients?.map(client => {
-
 										return (
-											<tr>
+											<tr key={client.id}>
 												<td>{client.id}</td>
 												<td>{client.firstName}</td>
 												<td>{client.lastName}</td>
-												<td>{new Date(client.birthday).toLocaleDateString("ua-UA", {
-													day: '2-digit',
-													month: "2-digit",
-													year: "numeric"
-												})}</td>
+												<td>
+													{new Date(client.birthday).toLocaleDateString(
+														'ua-UA',
+														{
+															day: '2-digit',
+															month: '2-digit',
+															year: 'numeric',
+														}
+													)}
+												</td>
 												<td>{client.phone}</td>
 												<td>{client.mail}</td>
-												<td><img style={{ width: "25px" }} src={trash} onClick={async()=>{
-													RoomAPI.deleteClientFromRoom(this.state.roomId, client.id).then(res=>{
-														this.state.room.clients = this.state.room.clients.filter(c=>c.id != client.id)
-														this.setState({room: this.state.room})
-													}).catch(err=>{
-														throwError(err.response.status, err.response.data.message)
-													})
-												}}></img></td>
+												<td>
+													<img
+														style={{ width: '25px' }}
+														src={trash}
+														onClick={async () => {
+															RoomAPI.deleteClientFromRoom(
+																this.state.roomId,
+																client.id
+															)
+																.then(res => {
+																	this.update()
+																})
+																.catch(err => {
+																	throwError(
+																		err.response.status,
+																		err.response.data.message
+																	)
+																})
+														}}
+													></img>
+												</td>
 											</tr>
 										)
 									})
@@ -218,3 +271,28 @@ class Room extends ComponentWithStore {
 }
 
 export default withRouter(Room)
+
+class PdfErrorBoundary extends Component {
+	state = { hasError: false }
+	static getDerivedStateFromError() {
+		return { hasError: true }
+	}
+	render() {
+		return this.state.hasError ? (
+			<button
+				style={{
+					textDecoration: 'none',
+					padding: '8px 12px',
+					backgroundColor: 'transparent',
+					color: 'var(--color-orange)',
+					border: '2px solid var(--color-orange)',
+				}}
+				onClick={() => window.location.reload()}
+			>
+				Retry
+			</button>
+		) : (
+			this.props.children
+		)
+	}
+}
