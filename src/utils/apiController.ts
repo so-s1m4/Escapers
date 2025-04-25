@@ -142,18 +142,26 @@ export class Room {
 		file: File,
 		password: string | null
 	) {
-		console.log(img)
 		const data = {
-			file
+			file,
 		}
 		return await fetchData
-			.post(`/rooms/${roomId}/clients/${clientId}`, data, { params: { password }, headers: { 'Content-Type': 'multipart/form-data' } })
+			.post(`/rooms/${roomId}/clients/${clientId}`, data, {
+				params: { password },
+				headers: { 'Content-Type': 'multipart/form-data' },
+			})
 			.then(res => res)
 	}
-
-	static async getClientsInRoom(roomId: number) {
+	static async deleteClientFromRoom(
+		roomId: number,
+		clientId: number,
+	) {
 		return await fetchData
-			.get(`/rooms/${roomId}/clients`).then(res => res)
+			.delete(`/rooms/${roomId}/clients/${clientId}`)
+			.then(res => res)
+	}
+	static async getClientsInRoom(roomId: number) {
+		return await fetchData.get(`/rooms/${roomId}/clients`).then(res => res)
 	}
 }
 export class Client {
@@ -165,25 +173,38 @@ export class Client {
 		return await fetchData.get(`/clients/${id}`, { params: { password } }).then(res => res)
 	}
 	static async register(
-		file: File,
+		file,
 		data: {
 			firstName: string
 			lastName: string
 			birthday: string
 			phone: string | null
 			mail: string | null
-		}
+		},
+		code: string | null
 	) {
 		return await fetchData
 			.post(
 				'/clients/',
 				{ file, data: JSON.stringify(data) },
 				{
+					params: { code },
 					headers: { 'Content-Type': 'multipart/form-data' },
 				}
 			)
 			.then(res => res)
 	}
+	static async update(id: number, data:{
+		file: File | null
+		data: any
+	}) {
+		return await fetchData
+			.patch(`/clients/${id}`, data, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			})
+			.then(res => res)
+	}
+
 	static async delete(id: number) {
 		return await fetchData.delete(`/clients/${id}`).then(res => res)
 	}

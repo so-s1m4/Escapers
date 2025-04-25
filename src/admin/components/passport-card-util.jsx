@@ -287,14 +287,13 @@ export const FormularDocument = data => {
 							</Text>
 							<Image
 								src={
-									BASE_URL +
-									'/public/' +
-									data.clients[0].RoomsClients.clientSignature
+									BASE_URL + '/public/' + client.RoomsClients.clientSignature
 								}
 								style={{
-									width: mm2pt(20),
+									width: mm2pt(30),
 									height: mm2pt(20),
 									objectFit: 'cover',
+									objectPosition: 'center',
 									position: 'absolute',
 									left: 0,
 									bottom: -10,

@@ -1,5 +1,5 @@
 import ComponentWithStore from 'utils/ComponentWithStore'
-import { Admin, Room as RoomAPI } from 'utils/apiController.ts'
+import { Admin, Client, Room as RoomAPI } from 'utils/apiController.ts'
 import { withRouter } from 'utils/withRouter'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { FormularDocument } from './passport-card-util'
@@ -195,8 +195,15 @@ class Room extends ComponentWithStore {
 													year: "numeric"
 												})}</td>
 												<td>{client.phone}</td>
-												<td>{client.mail} </td>
-												<td><img style={{ width: "25px" }} src={trash}></img></td>
+												<td>{client.mail}</td>
+												<td><img style={{ width: "25px" }} src={trash} onClick={async()=>{
+													RoomAPI.deleteClientFromRoom(this.state.roomId, client.id).then(res=>{
+														this.state.room.clients = this.state.room.clients.filter(c=>c.id != client.id)
+														this.setState({room: this.state.room})
+													}).catch(err=>{
+														throwError(err.response.status, err.response.data.message)
+													})
+												}}></img></td>
 											</tr>
 										)
 									})

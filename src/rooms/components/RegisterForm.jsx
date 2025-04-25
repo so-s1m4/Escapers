@@ -6,6 +6,7 @@ import css from 'rooms/css/RegisterForm.module.css'
 import SignatureCanvas from 'react-signature-canvas'
 import { Client, Room } from 'utils/apiController.ts'
 import throwError from 'utils/throwError.ts'
+import { b64toBlob } from 'utils/b64toBlob'
 
 function Register({ state, comp }) {
 	return (
@@ -18,6 +19,10 @@ function Register({ state, comp }) {
 						display: 'flex',
 						flexDirection: 'column',
 						gap: '2rem',
+					}}
+					onSubmit={e => {
+						e.preventDefault()
+						comp.setState({ step: 2 })
 					}}
 				>
 					<div className={css.inline} style={{ gap: '2rem' }}>
@@ -59,18 +64,18 @@ function Register({ state, comp }) {
 						<div className={css.inputTitle}>Phone</div>
 						<input
 							type='phone'
+							required
 							placeholder='+43123456789'
 							name='phone'
 							onChange={e => {
 								comp.setState({ phone: e.target.value })
 							}}
-							birthday
 						/>
 					</div>
 					<div className={css.inputWrapper}>
 						<div className={css.inputTitle}>Email</div>
 						<input
-							type='mail'
+							type='email'
 							placeholder='example@gmail.com'
 							name='email'
 							onChange={e => {
@@ -80,12 +85,7 @@ function Register({ state, comp }) {
 					</div>
 					<h5 style={{ marginTop: '-1.5rem' }}>* Pflichtfeld</h5>
 
-					<button
-						className={css.btn}
-						onClick={() => {
-							comp.setState({ step: 2 })
-						}}
-					>
+					<button className={css.btn} type='submit'>
 						Weiter <img src={arrow}></img>
 					</button>
 				</form>
@@ -389,9 +389,12 @@ function Signature({ state, comp }) {
 				canvasProps={{
 					width: window.innerWidth,
 					height: window.innerHeight * 0.25,
+					style: { backgroundColor: 'transparent', border: '1px solid white' },
 				}}
-				backgroundColor='white'
-				onEnd={comp.handleSignatureChange}
+				backgroundColor='transparent'
+				onEnd={() => {
+					comp.handleSignatureChange(canvasRef.current.toDataURL('image/png'))
+				}}
 			/>
 			<button
 				className={css.btn}
@@ -426,16 +429,19 @@ class RegisterForm extends React.Component {
 			code: '',
 			password: '',
 			check: false,
-			step: 0,
+			step: 1,
 			signatureBase64: null,
 		}
 		this.handleSignatureChange = this.handleSignatureChange.bind(this)
+		this.finishRegister = this.finishRegister.bind(this)
 	}
 	componentDidMount() {
-		this.state.roomId = window.location.pathname.split('/')[2]
+		this.state.roomId = window.location.pathname.split('/')[3]
 	}
-	handleSignatureChange(event) {
-		this.setState({ signatureBase64: event.base64 })
+	handleSignatureChange(data) {
+		this.setState({
+			signatureBase64: data,
+		})
 	}
 	finishRegister() {
 		let data
@@ -444,19 +450,21 @@ class RegisterForm extends React.Component {
 				code: this.state.code,
 				password: this.state.password,
 			}
-			Client.getClient(this.state.code, this.state.password)
+
+			Client.getClient(data.code, data.password)
 				.then(res => {
+					console.log(res)
 					Room.addClientToRoom(
 						this.state.roomId,
 						res.data.id,
-						this.state.signatureBase64,
+						b64toBlob(this.state.signatureBase64),
 						res.data.password
 					)
 						.then(res => {
-							throwError(200, 'Client added to room', JSON.stringify(res.data))
+							this.setState({ step: 4 })
 						})
 						.catch(err => {
-							throwError(404, err.response.data.message)
+							console.log(err)
 						})
 				})
 				.catch(err => {
@@ -467,27 +475,30 @@ class RegisterForm extends React.Component {
 				firstName: this.state.firstName,
 				lastName: this.state.lastName,
 				birthday: this.state.birthday,
-				mail: this.state.mail,
 				phone: this.state.phone,
 			}
-			Client.register(null, data)
+			if (this.state.mail) {
+				data.mail = this.state.mail
+			}
+
+			Client.register(null, data, sessionStorage.getItem('roomCode'))
 				.then(res => {
 					const client = res.data
 					Room.addClientToRoom(
 						this.state.roomId,
 						client.id,
-						this.state.signatureBase64,
+						b64toBlob(this.state.signatureBase64),
 						client.password
 					)
 						.then(res => {
-							console.log(res.data)
+							this.setState({ step: 4 })
 						})
 						.catch(err => {
-							throwError(404, err.response.data.message)
+							console.log(err)
 						})
 				})
 				.catch(err => {
-					throwError(404, err.response.data.message)
+					console.log(err)
 				})
 		}
 	}
@@ -501,6 +512,8 @@ class RegisterForm extends React.Component {
 				return <EULE state={this.state} comp={this} />
 			case 3:
 				return <Signature state={this.state} comp={this} />
+			case 4:
+				return <div>Success</div>
 			default:
 				break
 		}
