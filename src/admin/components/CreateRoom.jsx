@@ -3,6 +3,7 @@ import css from 'admin/css/CreateRoom.module.css'
 import { Room } from 'utils/apiController.ts'
 import { withRouter } from 'utils/withRouter'
 import throwError from 'utils/throwError.ts'
+import { BASE_URL } from 'utils/fetchData.ts'
 
 export class CreateRoom extends ComponentWithStore {
 	async createRoom(gameId) {
@@ -25,7 +26,7 @@ export class CreateRoom extends ComponentWithStore {
 				onClick={() => this.createRoom(game.id)}
 			>
 				<img
-					src={`http://localhost:8000/public/${'' + game.icon}`}
+					src={`${BASE_URL}/public/${'' + game.icon}`}
 					alt={game.name}
 					style={{
 						width: '100%',
@@ -65,5 +66,4 @@ export class CreateRoom extends ComponentWithStore {
 		)
 	}
 }
-
 export default withRouter(CreateRoom)
