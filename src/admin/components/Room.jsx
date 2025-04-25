@@ -92,10 +92,11 @@ class Room extends ComponentWithStore {
 						)}
 					</div>
 					<div className={css.buttonsWrapper}>
-					  <input
+						<input
 							id='gameTimeInput'
 							type='number'
 							defaultValue={this.state.room.gameTime}
+							className={css.inputField}
 						/>
 						<img
 							style={{

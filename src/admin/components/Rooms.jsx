@@ -66,11 +66,6 @@ class Rooms extends ComponentWithStore {
 					<div className={css.roomGame}>
 						<b>{game.name}</b>
 					</div>
-					<div className={css.roomPlayers}>
-						<b>
-							{room.playersIDs?.length}/{game.maxPlayers}
-						</b>
-					</div>
 				</div>
 				<div
 					style={{
