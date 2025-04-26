@@ -125,15 +125,38 @@ class Room extends ComponentWithStore {
 						>
 							Terminate
 						</button>
+
+						{this.store.state.myInfo.isSuperAdmin && !this.state.room.isActivate && (
+							<img src={trash} className={css.deleteButton} alt='delete' onClick={() => {
+								RoomAPI.deleteRoom(this.state.roomId).then(() => {
+									this.store.state.rooms = this.store.state.rooms.filter(room => room.id != this.state.roomId)
+									this.store.setState({ rooms: this.store.state.rooms })
+									this.props.nav('/admin/rooms')
+								})
+							}} />
+						)}
 					</div>
 				</div>
 				<div className={css.topBar}>
 					<div className={css.roomGame}>
-						{
-							this.store.state.games.find(
-								game => game.id == this.state.room.GameId
-							).name
-						}
+						<select name="game" id="game" className={css.selectGame} onChange={(e)=>{
+							RoomAPI.updateGame(this.state.roomId, e.target.value).then(() => {
+								this.update()
+								window.location.reload()
+							})
+						}}>
+							{this.store.state.games.map(game => {
+								return (
+									<option
+										key={game.id}
+										value={game.id}
+										selected={game.id == this.state.room.GameId}
+									>
+										{game.name}
+									</option>
+								)
+							})}
+						</select>
 					</div>
 					{this.state.room.isActivate && (
 						<div className={css.roomCode}>

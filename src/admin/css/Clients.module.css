@@ -111,6 +111,15 @@
 	padding-left: 0.5rem;
 	font-size: 1rem;
 }
+.inputField:disabled {
+	flex: 1;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	color: white;
+
+	min-width: fit-content;
+}
 
 .inputField:focus {
 	outline: none;

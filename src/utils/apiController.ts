@@ -132,6 +132,9 @@ export class Room {
 	static async closeRoom(id: number) {
 		return await fetchData.patch(`/rooms/${id}/close`).then(res => res)
 	}
+	static async deleteRoom(id: number) {
+		return await fetchData.delete(`/rooms/${id}`).then(res => res)
+	}
 	static async isRoomOpen(code: number) {
 		return await fetchData.get(`/rooms/code/${code}/`).then(res => res)
 	}
@@ -162,6 +165,11 @@ export class Room {
 	static async updateGameTime(roomId: number, gameTime: number) {
 		return await fetchData
 			.patch(`/rooms/${roomId}`, { gameTime })
+			.then(res => res)
+	}
+	static async updateGame(roomId: number, gameId: number) {
+		return await fetchData
+			.patch(`/rooms/${roomId}`, { gameId })
 			.then(res => res)
 	}
 }

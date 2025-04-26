@@ -56,7 +56,11 @@ class Store {
 	}
 
 	async loadInfo() {
-		const myInfo = await this.getMyInfo()
+		const myInfo = await this.getMyInfo().catch(err => {
+			localStorage.clear()
+			window.location.reload()
+			this.listeners.forEach(component => component.forceUpdate())
+		})
 
 		let myLocations;
 		if (myInfo && myInfo.isSuperAdmin) {

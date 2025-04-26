@@ -39,3 +39,48 @@ div::-webkit-scrollbar-thumb {
   background-color: var(--color-orange);
   border-radius: 10px;
 }
+
+select {
+	width: fit-content;
+	height: fit-content;
+
+	padding: 0 1rem 0 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	color: var(--color-orange);
+	border: 0;
+	border-bottom: .15rem solid var(--color-orange);
+	border-radius: 0;
+	font-size: 2rem;
+	font-weight: bold;
+
+	background: transparent;
+	outline: none;
+	transition: all 0.2s ease-in-out;
+
+	cursor: pointer;
+}
+select {
+  &, &::picker(select) {
+    appearance: base-select;    
+  }
+}
+select::picker-icon {
+	content: "➤";
+	color: var(--color-orange);
+	font-size: 1rem;
+	margin-right: 20px;
+	transform: translateX(-50%) rotateZ(90deg);
+	font-weight: bolder;
+	margin: 0;
+}
+select option {
+	color: var(--color-orange);
+	font-size: 2rem;
+	font-weight: 300;
+	background: #222;
+
+	padding: .5rem;
+}

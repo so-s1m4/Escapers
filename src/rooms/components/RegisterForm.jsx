@@ -387,13 +387,15 @@ function Signature({ state, comp }) {
 		<div
 			className={css.wrapper}
 			style={{
-				padding: '1rem',
+				padding: '1rem 5%',
 				display: 'flex',
 				justifyContent: 'center',
 				flexDirection: 'column',
 				gap: '.5rem',
+				position: 'relative',
 			}}
 		>
+			<h1>Unterschrift</h1>
 			<SignatureCanvas
 				ref={canvasRef}
 				penColor='blue'
@@ -418,6 +420,7 @@ function Signature({ state, comp }) {
 			</button>
 			<button
 				className={css.btn}
+				style={{ width: '91%', position: 'absolute', bottom: 20, left: "50%", transform: 'translateX(-50%)' }}
 				onClick={() => {
 					comp.finishRegister()
 				}}
