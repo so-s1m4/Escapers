@@ -6,7 +6,7 @@ import { PassportCardDocument } from './passport-card-util'
 import throwError from 'utils/throwError.ts'
 import bg from 'img/passportTemplate.jpg'
 import bg2 from 'img/passportTemplate2.jpg'
-import qr from "img/qr.jpg"
+import qr from 'img/qr.jpg'
 import pencil from 'img/pencil.svg'
 import trash from 'img/trashcan.svg'
 
@@ -24,8 +24,11 @@ export default function Clients() {
 		elements
 			.filter(elem => elem.nodeName == 'INPUT')
 			.forEach(elem => {
-				if (elem.type != 'file') data[elem.name] = elem.value
-				else file = elem.files[0]
+				if (elem.type != 'file') {
+					if (elem.value != '') {
+						data[elem.name] = elem.value
+					}
+				} else file = elem.files[0]
 			})
 		await Client.register(file, data)
 			// .then(res => {
@@ -57,49 +60,6 @@ export default function Clients() {
 		<>
 			<div className={css.nav}>
 				<div className={css.title}>Clients</div>
-				{/* <div className={css.filters} id='filters'>
-					<h2>Filters</h2>
-					<input
-						defaultValue={''}
-						onChange={() => updateFilter()}
-						name='code'
-						placeholder='Code'
-						className={css.inputField}
-					></input>
-					<input
-						onChange={() => updateFilter()}
-						name='firstname'
-						placeholder='First name'
-						className={css.inputField}
-					></input>
-					<input
-						onChange={() => updateFilter()}
-						name='lastname'
-						placeholder='Last name'
-						className={css.inputField}
-					></input>
-					<input
-						onChange={() => updateFilter()}
-						name='birthday'
-						type='date'
-						placeholder='Birthday'
-						className={css.inputField}
-					></input>
-					<input
-						onChange={() => updateFilter()}
-						name='phone'
-						type='phone'
-						placeholder='Phone'
-						className={css.inputField}
-					></input>
-					<input
-						onChange={() => updateFilter()}
-						name='email'
-						type='email'
-						placeholder='Email'
-						className={css.inputField}
-					></input>
-				</div> */}
 				<form
 					className={css.filters}
 					name='createClient'
@@ -111,23 +71,27 @@ export default function Clients() {
 						name='firstName'
 						placeholder='First name'
 						className={css.inputField}
+						required
 					></input>
 					<input
 						name='lastName'
 						placeholder='Last name'
 						className={css.inputField}
+						required
 					></input>
 					<input
 						name='birthday'
 						type='date'
 						placeholder='Birthday'
 						className={css.inputField}
+						required
 					></input>
 					<input
 						name='phone'
 						type='phone'
 						placeholder='Phone'
 						className={css.inputField}
+						required
 					></input>
 					<input
 						name='mail'
@@ -141,6 +105,7 @@ export default function Clients() {
 						type='file'
 						placeholder='Icon'
 						className={css.inputField}
+						required
 					></input>
 					<button className={css.createBtn}>Create</button>
 				</form>
@@ -149,13 +114,21 @@ export default function Clients() {
 				<table className={css.table} style={{ position: 'relative' }}>
 					<thead>
 						<tr id='filters'>
-							<th style={{ border: 0 }}></th>
 							<th>
 								<input
 									defaultValue={''}
 									onChange={() => updateFilter()}
-									name='code'
-									placeholder='Code'
+									name='id'
+									placeholder='ID'
+									className={css.inputField}
+								></input>
+							</th>
+							<th>
+								<input
+									defaultValue={''}
+									onChange={() => updateFilter()}
+									name='password'
+									placeholder='Password'
 									className={css.inputField}
 								></input>
 							</th>
@@ -216,6 +189,8 @@ export default function Clients() {
 						{clients
 							.filter(
 								cl =>
+									cl.id.toString().includes(filter.id) &&
+									cl.password.includes(filter.password) &&
 									cl.firstName.startsWith(filter.firstname) &&
 									cl.lastName.startsWith(filter.lastname) &&
 									cl.birthday.includes(filter.birthday) &&
@@ -225,12 +200,9 @@ export default function Clients() {
 										(cl.phone && cl.phone.startsWith(filter.phone)))
 							)
 							.map((client, index) => {
-								console.log(client)
 								return (
 									<tr key={index}>
-										<td>
-											{'0'.repeat(6 - ('' + client.id).length) + client.id}
-										</td>
+										<td>{client.id}</td>
 										<td>{client.password}</td>
 										<td>
 											{client.lastName} {client.firstName}

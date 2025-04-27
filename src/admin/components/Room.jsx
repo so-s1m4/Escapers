@@ -34,7 +34,7 @@ class Room extends ComponentWithStore {
 	}
 	async update() {
 		const room = this.store.state.rooms?.find(
-			room => room.id === this.state.roomId
+			room => room.id == this.state.roomId
 		)
 		if (!room) {
 			setTimeout(() => {
@@ -59,7 +59,7 @@ class Room extends ComponentWithStore {
 	}
 	componentDidMount() {
 		this.store.register(this)
-		this.state.roomId = parseInt(this.props.params.id)
+		this.state.roomId = this.props.params.id
 		this.update()
 	}
 
@@ -136,7 +136,7 @@ class Room extends ComponentWithStore {
 									onClick={() => {
 										RoomAPI.deleteRoom(this.state.roomId).then(() => {
 											this.store.state.rooms = this.store.state.rooms.filter(
-												room => room.id !== this.state.roomId
+												room => room.id != this.state.roomId
 											)
 											this.store.setState({ rooms: this.store.state.rooms })
 											this.props.nav('/admin/rooms')
@@ -166,7 +166,7 @@ class Room extends ComponentWithStore {
 									<option
 										key={game.id}
 										value={game.id}
-										selected={game.id === this.state.room.GameId}
+										selected={game.id == this.state.room.GameId}
 									>
 										{game.name}
 									</option>
@@ -191,7 +191,7 @@ class Room extends ComponentWithStore {
 						<div className={css.roomInfoText}>
 							{
 								this.store.state.myLocations.find(
-									l => l.id === this.state.room.LocationId
+									l => l.id == this.state.room.LocationId
 								).address
 							}
 						</div>
@@ -219,7 +219,7 @@ class Room extends ComponentWithStore {
 							Players {this.state.room.clients.length}/
 							{
 								this.store.state.games.find(
-									game => game.id === this.state.room.GameId
+									game => game.id == this.state.room.GameId
 								).maxPlayers
 							}
 						</div>
