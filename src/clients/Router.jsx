@@ -8,7 +8,7 @@ export default function Router() {
 		<Routes>
 			<Route path='/' element={<Main />} />
 			<Route path='/login' element={<Login />} />
-			<Route path='*' element={<Navigate to='/' />} />
+			<Route path='*' element={<Navigate to='/login' />} />
 		</Routes>
 	)
 }

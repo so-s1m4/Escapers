@@ -31,11 +31,11 @@ code {
 	gap: 1vh;
 }
 
-div::-webkit-scrollbar {
-  width: 0.5rem;
+*::-webkit-scrollbar {
+  width: 0.2rem;
   background-color: #333;
 }
-div::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background-color: var(--color-orange);
   border-radius: 10px;
 }

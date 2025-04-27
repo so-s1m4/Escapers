@@ -1,5 +1,5 @@
 import ComponentWithStore from 'utils/ComponentWithStore'
-import { Admin, Client, Room as RoomAPI } from 'utils/apiController.ts'
+import { Admin, Room as RoomAPI } from 'utils/apiController.ts'
 import { withRouter } from 'utils/withRouter'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { FormularDocument } from './passport-card-util'
@@ -23,7 +23,7 @@ class Room extends ComponentWithStore {
 	async closeIt() {
 		this.state.room.isActivate = false
 		this.store.state.rooms = this.store.state.rooms.map(room => {
-			if (room.id == this.state.roomId) {
+			if (room.id === this.state.roomId) {
 				room.isActivate = false
 			}
 			return room
@@ -34,7 +34,7 @@ class Room extends ComponentWithStore {
 	}
 	async update() {
 		const room = this.store.state.rooms?.find(
-			room => room.id == this.state.roomId
+			room => room.id === this.state.roomId
 		)
 		if (!room) {
 			setTimeout(() => {
@@ -59,7 +59,7 @@ class Room extends ComponentWithStore {
 	}
 	componentDidMount() {
 		this.store.register(this)
-		this.state.roomId = this.props.params.id
+		this.state.roomId = parseInt(this.props.params.id)
 		this.update()
 	}
 
@@ -84,12 +84,12 @@ class Room extends ComponentWithStore {
 			>
 				<div className={css.header}>
 					<div className={css.roomId}>
-						#{this.state.room.id} -
 						{this.state.room.isActivate ? (
-							<b style={{ color: 'lime' }}>Active</b>
+							<b style={{ color: 'lime' }}>🟢</b>
 						) : (
-							<b style={{ color: 'red' }}>Inactive</b>
+							<b style={{ color: 'red' }}>🔴</b>
 						)}
+						#{this.state.room.id}
 					</div>
 					<div className={css.buttonsWrapper}>
 						<input
@@ -105,6 +105,7 @@ class Room extends ComponentWithStore {
 								background: 'transparent',
 								border: 'none',
 							}}
+							alt='edit game time'
 							src={pen}
 							onClick={async e => {
 								const gameTime = document.getElementById('gameTimeInput').value
@@ -126,31 +127,46 @@ class Room extends ComponentWithStore {
 							Terminate
 						</button>
 
-						{this.store.state.myInfo.isSuperAdmin && !this.state.room.isActivate && (
-							<img src={trash} className={css.deleteButton} alt='delete' onClick={() => {
-								RoomAPI.deleteRoom(this.state.roomId).then(() => {
-									this.store.state.rooms = this.store.state.rooms.filter(room => room.id != this.state.roomId)
-									this.store.setState({ rooms: this.store.state.rooms })
-									this.props.nav('/admin/rooms')
-								})
-							}} />
-						)}
+						{this.store.state.myInfo.isSuperAdmin &&
+							!this.state.room.isActivate && (
+								<img
+									src={trash}
+									className={css.deleteButton}
+									alt='deleteItem'
+									onClick={() => {
+										RoomAPI.deleteRoom(this.state.roomId).then(() => {
+											this.store.state.rooms = this.store.state.rooms.filter(
+												room => room.id !== this.state.roomId
+											)
+											this.store.setState({ rooms: this.store.state.rooms })
+											this.props.nav('/admin/rooms')
+										})
+									}}
+								/>
+							)}
 					</div>
 				</div>
 				<div className={css.topBar}>
 					<div className={css.roomGame}>
-						<select name="game" id="game" className={css.selectGame} onChange={(e)=>{
-							RoomAPI.updateGame(this.state.roomId, e.target.value).then(() => {
-								this.update()
-								window.location.reload()
-							})
-						}}>
+						<select
+							name='game'
+							id='game'
+							className={css.selectGame}
+							onChange={e => {
+								RoomAPI.updateGame(this.state.roomId, e.target.value).then(
+									() => {
+										this.update()
+										window.location.reload()
+									}
+								)
+							}}
+						>
 							{this.store.state.games.map(game => {
 								return (
 									<option
 										key={game.id}
 										value={game.id}
-										selected={game.id == this.state.room.GameId}
+										selected={game.id === this.state.room.GameId}
 									>
 										{game.name}
 									</option>
@@ -175,7 +191,7 @@ class Room extends ComponentWithStore {
 						<div className={css.roomInfoText}>
 							{
 								this.store.state.myLocations.find(
-									l => l.id == this.state.room.LocationId
+									l => l.id === this.state.room.LocationId
 								).address
 							}
 						</div>
@@ -203,7 +219,7 @@ class Room extends ComponentWithStore {
 							Players {this.state.room.clients.length}/
 							{
 								this.store.state.games.find(
-									game => game.id == this.state.room.GameId
+									game => game.id === this.state.room.GameId
 								).maxPlayers
 							}
 						</div>
@@ -264,6 +280,7 @@ class Room extends ComponentWithStore {
 													<img
 														style={{ width: '25px' }}
 														src={trash}
+														alt='delete client from room'
 														onClick={async () => {
 															RoomAPI.deleteClientFromRoom(
 																this.state.roomId,

@@ -1,3 +1,28 @@
+.container select {
+	display: flex;
+	border: 0;
+	padding: 0;
+	height: fit-content;
+	max-height: 15vh;
+}
+.container select::picker-icon {
+  display: none;
+}
+.container select option{
+	width: 100%;
+	text-align: left;
+	font-size: 1.5rem;
+	background-color: transparent;
+	overflow-x: auto;
+}
+.container select option::-webkit-scrollbar {
+	display: none;
+}
+.container select optgroup {
+	margin-bottom: 1rem;
+}
+
+
 .container {
 	display: flex;
 	flex-direction: column;

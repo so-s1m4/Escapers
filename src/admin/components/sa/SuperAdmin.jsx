@@ -2,7 +2,7 @@ import { withRouter } from 'utils/withRouter'
 import ComponentWithStore from 'utils/ComponentWithStore'
 
 import css from './SuperAdmin.module.css'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { Admin, Game, Location } from 'utils/apiController.ts'
 import { useEffect, useState } from 'react'
 import throwError from 'utils/throwError.ts'
@@ -12,7 +12,7 @@ function Admins({ store }) {
 	const [update, setUpdate] = useState(false)
 
 	const createAdmin = async () => {
-		const admin = await Admin.addAdmin({
+		await Admin.addAdmin({
 			username: document.querySelector('input[name="username"]').value,
 			firstName: document.querySelector('input[name="firstName"]').value,
 			lastName: document.querySelector('input[name="lastName"]').value,
@@ -55,7 +55,10 @@ function Admins({ store }) {
 								return admin
 							})
 							.catch(err => {
-								throwError(err.status, err.response?.data.message || err.message)
+								throwError(
+									err.status,
+									err.response?.data.message || err.message
+								)
 							})
 					})
 					return Promise.all(data)
@@ -104,11 +107,27 @@ function Admins({ store }) {
 								id=''
 								multiple
 							>
-								{store.state.myLocations.map(location => {
+								{Array.from(
+									new Set(
+										store.state.myLocations.map(location => location.city)
+									)
+								).map((city, index) => {
 									return (
-										<option key={location.id} value={location.id}>
-											{location.address}, {location.postcode}
-										</option>
+										<optgroup
+											label={city}
+											key={index}
+											style={{ textAlign: 'left' }}
+										>
+											{store.state.myLocations
+												.filter(location => location.city === city)
+												.map(location => {
+													return (
+														<option key={location.id} value={location.id}>
+															{location.address}
+														</option>
+													)
+												})}
+										</optgroup>
 									)
 								})}
 							</select>
@@ -221,6 +240,7 @@ function Games({ store }) {
 			.then(res => {
 				if (res.success) {
 					store.state.games.push(res.data)
+					// eslint-disable-next-line
 					store.state.games = store.state.games.filter(g => 1 == 1)
 
 					store.setState({ games: store.state.games })
@@ -252,6 +272,7 @@ function Games({ store }) {
 						.catch(err => {
 							throwError(err.status, err.response?.data.message || err.message)
 						})
+					// eslint-disable-next-line
 					store.state.games = store.state.games.filter(g => 1 == 1)
 					store.setState({ games: store.state.games })
 				}
@@ -263,7 +284,7 @@ function Games({ store }) {
 
 	useEffect(() => {
 		const fetchGames = async () => {
-			const response = await Game.getLocationsGames(store.state.curLocation)
+			await Game.getLocationsGames(store.state.curLocation)
 				.then(res => {
 					setGames(res.data)
 				})
@@ -420,6 +441,7 @@ function Locations({ store }) {
 				if (res.success) {
 					store.state.myLocations.push(res.data)
 					setLocations(store.state.myLocations)
+					// eslint-disable-next-line
 					store.state.myLocations = store.state.myLocations.filter(g => 1 == 1)
 
 					store.setState({ myLocations: store.state.myLocations })
@@ -451,7 +473,7 @@ function Locations({ store }) {
 
 	useEffect(() => {
 		const fetchLocs = async () => {
-			const response = await Location.getLocations()
+			await Location.getLocations()
 				.then(res => {
 					setLocations(res.data)
 				})
@@ -599,10 +621,6 @@ function Locations({ store }) {
 }
 
 class SuperAdmin extends ComponentWithStore {
-	constructor(props) {
-		super(props)
-	}
-
 	componentDidMount() {
 		if (this.store.state.myInfo && !this.store.state.myInfo.isSuperAdmin) {
 			this.props.nav('/admin')
