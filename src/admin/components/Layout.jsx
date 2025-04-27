@@ -58,7 +58,7 @@ class Layout extends ComponentWithStore {
 											.filter(location => location.city === city)
 											.map(location => {
 												return (
-													<option key={location.id} value={location.id}>
+													<option key={location.id} value={location.id} style={{ paddingLeft: '1.5rem' }}>
 														{location.address}
 													</option>
 												)
