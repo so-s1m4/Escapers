@@ -468,7 +468,7 @@ class RegisterForm extends React.Component {
 			code: '',
 			password: '',
 			check: false,
-			step: 3,
+			step: 0,
 			signatureBase64: null,
 		}
 		this.handleSignatureChange = this.handleSignatureChange.bind(this)
