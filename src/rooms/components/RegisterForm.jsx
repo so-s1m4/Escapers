@@ -420,9 +420,15 @@ function Signature({ state, comp }) {
 			</button>
 			<button
 				className={css.btn}
-				style={{ width: '91%', position: 'absolute', bottom: 20, left: "50%", transform: 'translateX(-50%)' }}
-				onClick={() => {
-					comp.finishRegister()
+				style={{
+					width: '91%',
+					position: 'absolute',
+					bottom: 20,
+					left: '50%',
+					transform: 'translateX(-50%)',
+				}}
+				onClick={e => {
+					comp.finishRegister(e)
 				}}
 			>
 				Join <img src={arrow}></img>
@@ -462,7 +468,7 @@ class RegisterForm extends React.Component {
 			code: '',
 			password: '',
 			check: false,
-			step: 0,
+			step: 3,
 			signatureBase64: null,
 		}
 		this.handleSignatureChange = this.handleSignatureChange.bind(this)
@@ -476,7 +482,10 @@ class RegisterForm extends React.Component {
 			signatureBase64: data,
 		})
 	}
-	finishRegister() {
+	finishRegister(e) {
+		e.target.disabled = true
+		e.target.innerHTML = 'Loading...'
+
 		let data
 		if (this.state.code && this.state.password) {
 			data = {
@@ -527,11 +536,15 @@ class RegisterForm extends React.Component {
 							this.setState({ step: 4 })
 						})
 						.catch(err => {
-							console.log(err)
+							throwError(500, err.response.data.message)
+							e.target.disabled = false
+							e.target.children.innerHTML = 'Try Again'
 						})
 				})
 				.catch(err => {
-					console.log(err)
+					throwError(500, err.response.data.message)
+					e.target.disabled = false
+					e.target.innerHTML = 'Try Again'
 				})
 		}
 	}
