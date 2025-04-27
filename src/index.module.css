@@ -84,3 +84,11 @@ select option {
 
 	padding: .5rem;
 }
+select optgroup {
+	color: var(--color-orange);
+	font-size: 2rem;
+	font-weight: 600;
+	background: #222;
+
+	padding: .5rem;
+}

@@ -43,13 +43,27 @@ class Layout extends ComponentWithStore {
 								<option value=''>No Locations</option>
 							)}
 							{this.store.state.myLocations.length > 0 && (
-								<option value=''>Select Location</option>
+								<option value='' disabled hidden>Select Location</option>
 							)}
-							{this.store.state.myLocations.map(loc => {
+							{Array.from(
+								new Set(this.store.state.myLocations.map(location => location.city))
+							).map((city, index) => {
 								return (
-									<option key={loc.id} value={loc.id}>
-										{loc.address}
-									</option>
+									<optgroup
+										label={city}
+										key={index}
+										style={{ textAlign: 'left' }}
+									>
+										{this.store.state.myLocations
+											.filter(location => location.city === city)
+											.map(location => {
+												return (
+													<option key={location.id} value={location.id}>
+														{location.address}
+													</option>
+												)
+											})}
+									</optgroup>
 								)
 							})}
 						</select>
