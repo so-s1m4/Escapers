@@ -14,7 +14,7 @@ export default function Router() {
 					<Route path='/rooms/*' element={<RoomsRouter />} />
 					<Route path='/admin/*' element={<AdminRouter />} />
 					<Route path='/clients/*' element={<ClientRouter />} />
-					<Route path='*' element={<Navigate to='/admin' />} />
+					<Route path='*' element={<Navigate to='/rooms' />} />
 				</Routes>
 			</BrowserRouter>
 		</>
