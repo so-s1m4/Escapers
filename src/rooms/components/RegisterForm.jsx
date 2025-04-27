@@ -72,7 +72,7 @@ function Register({ state, comp }) {
 						/>
 					</div>
 					<div className={css.inputWrapper}>
-						<div className={css.inputTitle}>Phone</div>
+						<div className={css.inputTitle}>Phone *</div>
 						<input
 							type='phone'
 							required
@@ -131,7 +131,7 @@ function Login({ state, comp }) {
 						<div className={css.inputTitle}>Code</div>
 						<input
 							type='number'
-							placeholder='1234'
+							placeholder='1234 without 0'
 							name='code'
 							onChange={e => {
 								comp.setState({ code: e.target.value })

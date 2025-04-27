@@ -104,6 +104,7 @@ class Room extends ComponentWithStore {
 								objectFit: 'fill',
 								background: 'transparent',
 								border: 'none',
+								cursor: 'pointer'
 							}}
 							alt='edit game time'
 							src={pen}

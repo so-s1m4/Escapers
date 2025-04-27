@@ -40,6 +40,7 @@ class Rooms extends ComponentWithStore {
 					flexDirection: 'column',
 					padding: '.5rem 1rem',
 					gap: '.5rem',
+					cursor: 'pointer',
 				}}
 			>
 				<div
