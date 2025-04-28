@@ -11,7 +11,7 @@ class Join extends ComponentWithStore {
 		this.state = {
 			code: [null, null, null, null],
 		}
-		const checkRoomCode = this.checkRoomCode.bind(this)
+		this.checkRoomCode.bind(this)
 	}
 
 	focusNextInput = index => {

@@ -7,7 +7,7 @@ import { BASE_URL } from 'utils/fetchData.ts'
 
 export class CreateRoom extends ComponentWithStore {
 	async createRoom(gameId) {
-		const room = await Room.createRoom(this.state.curLocation, gameId)
+		await Room.createRoom(this.state.curLocation, gameId)
 			.then(res => {
 				this.store.setState({ rooms: [...this.state.rooms, res.data] })
 				this.props.nav('/admin/rooms/' + res.data.id)

@@ -35,7 +35,7 @@ class Store {
 
 	async getRooms() {
 		if (this.state.rooms) return this.state.rooms
-		const rooms = await Room.getRoomsOnLocation(this.state.curLocation)
+		let rooms = await Room.getRoomsOnLocation(this.state.curLocation)
 		rooms = rooms.data
 		this.setState({ rooms })
 		return rooms.data

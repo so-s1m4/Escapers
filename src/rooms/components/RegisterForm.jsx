@@ -1,5 +1,4 @@
 import React, { useRef } from 'react'
-import { Routes, Route } from 'react-router-dom'
 import arrow from 'img/arrow-right.svg'
 
 import css from 'rooms/css/RegisterForm.module.css'
