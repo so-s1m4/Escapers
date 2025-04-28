@@ -6,10 +6,8 @@
 	background-color: #000;
 	gap: 1rem;
 
+	justify-content: space-between;
 	z-index: 2;
-
-	justify-content: space-evenly;
-	padding: 0 2rem; 
 }
 
 
@@ -30,7 +28,7 @@
 	color: var(--color-orange);
 	outline: none;
 	text-decoration: none;
-	font-size: 1.5vw;
+	font-size: 1.5rem;
 	transition: all 0.3s ease-in-out;
 	border-radius: 0;
 
@@ -40,7 +38,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 
-	font-weight: 600;
+	font-weight: 300;
 }
 .navList > select {
 	background: transparent;

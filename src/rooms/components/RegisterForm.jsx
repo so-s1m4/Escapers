@@ -21,7 +21,11 @@ function Register({ state, comp }) {
 					}}
 					onSubmit={e => {
 						e.preventDefault()
-						comp.setState({ step: 2 })
+						if (new Date(comp.birthday) - new Date() > 0) {
+							throwError(406, 'Invalid date')
+						} else {
+							comp.setState({ step: 2 })
+						}
 					}}
 				>
 					<div className={css.inputWrapper}>
