@@ -6,7 +6,7 @@ import { PassportCardDocument } from './passport-card-util'
 import throwError from 'utils/throwError.ts'
 import bg from 'img/passportTemplate.jpg'
 import bg2 from 'img/passportTemplate2.jpg'
-import qr from 'img/qr.jpg'
+import qr from 'img/qr.png'
 import pencil from 'img/pencil.svg'
 import trash from 'img/trashcan.svg'
 
