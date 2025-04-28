@@ -35,7 +35,7 @@
 .profile-section,
 .games-section {
 	margin-bottom: 2rem;
-	width: 100%;
+	max-width: 100svw;
 }
 
 .profile-header,
@@ -103,6 +103,10 @@
 	justify-content: space-between;
 	color: #ffa500;
 	border-bottom: 1px solid;
+
+	max-width: 100%;
+	text-overflow: ellipsis;
+	overflow: auto;
 }
 
 .info-label {
