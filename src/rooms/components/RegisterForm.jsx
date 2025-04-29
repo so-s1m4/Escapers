@@ -21,19 +21,34 @@ function Register({ state, comp }) {
 					}}
 					onSubmit={e => {
 						e.preventDefault()
-						if (new Date(comp.birthday) - new Date() > 0) {
-							throwError(406, 'Invalid date')
+						const alt = Math.floor(
+							(new Date() - new Date(comp.state.birthday)) /
+								1000 /
+								60 /
+								60 /
+								24 /
+								365.25
+						)
+						if (alt < 10) {
+							throwError(
+								406,
+								'Sie können nicht an einem Spiel teilnehmen, da Sie unter 10 Jahre alt sind'
+							)
 						} else {
 							comp.setState({ step: 2 })
 						}
 					}}
 				>
 					<div className={css.inputWrapper}>
-						<div className={css.inputTitle}>Photo</div>
+						<div className={css.inputTitle}>
+							Photo <h6>(passport format)</h6>
+						</div>
 						<input
 							type='file'
 							required
 							name='photo'
+							accept='image/*'
+							capture="user"
 							onChange={e => {
 								comp.setState({ photo: e.target.files[0] })
 							}}
@@ -77,8 +92,10 @@ function Register({ state, comp }) {
 					<div className={css.inputWrapper}>
 						<div className={css.inputTitle}>Phone *</div>
 						<input
-							type='phone'
+							type='tel'
 							required
+							pattern='^\+43\d{8,15}$'
+							title='Austrian phone number, e.g. +43'
 							placeholder='+43123456789'
 							name='phone'
 							onChange={e => {
@@ -97,7 +114,7 @@ function Register({ state, comp }) {
 							}}
 						/>
 					</div>
-					<h5 style={{ marginTop: '-1.5rem' }}>* Pflichtfeld</h5>
+					<h5 style={{ marginTop: '0rem' }}>* Pflichtfeld</h5>
 
 					<button className={css.btn} type='submit'>
 						Weiter <img src={arrow}></img>
@@ -123,11 +140,23 @@ function Login({ state, comp }) {
 			<>
 				<h2>Einloggen</h2>
 				<form
-					action='js:void(0)'
+					action='submit'
 					style={{
 						display: 'flex',
 						flexDirection: 'column',
 						gap: '2rem',
+					}}
+					onSubmit={async e => {
+						e.preventDefault()
+						Client.getClient(comp.state.code, comp.state.password)
+							.then(res => {
+								if (res.data) {
+									comp.setState({ step: 2 })
+								}
+							})
+							.catch(err => {
+								throwError(404, 'Invalid code or password')
+							})
 					}}
 				>
 					<div className={css.inputWrapper}>
@@ -151,20 +180,7 @@ function Login({ state, comp }) {
 							}}
 						/>
 					</div>
-					<button
-						className={css.btn}
-						onClick={async () => {
-							Client.getClient(comp.state.code, comp.state.password)
-								.then(res => {
-									if (res.data) {
-										comp.setState({ step: 2 })
-									}
-								})
-								.catch(err => {
-									throwError(404, 'Invalid code or password')
-								})
-						}}
-					>
+					<button className={css.btn} type='submit'>
 						Weiter <img src={arrow}></img>
 					</button>
 				</form>

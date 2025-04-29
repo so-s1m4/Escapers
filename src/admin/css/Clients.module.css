@@ -110,6 +110,9 @@
 	color: var(--color-orange);
 	padding-left: 0.5rem;
 	font-size: 1rem;
+	font-weight: bold;
+
+	font-size: 1rem;
 }
 .inputField:disabled {
 	flex: 1;

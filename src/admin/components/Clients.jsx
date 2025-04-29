@@ -7,8 +7,7 @@ import throwError from 'utils/throwError.ts'
 import bg from 'img/passportTemplate.jpg'
 import bg2 from 'img/passportTemplate2.jpg'
 import qr from 'img/qr.png'
-import pencil from 'img/pencil.svg'
-import trash from 'img/trashcan.svg'
+import { refresh, edit, can } from 'img/svgs'
 
 export default function Clients() {
 	const pdfRef = useRef(null)
@@ -135,14 +134,16 @@ export default function Clients() {
 							<th>
 								<input
 									onChange={() => updateFilter()}
-									name='firstname'
-									placeholder='First name'
-									className={css.inputField}
-								></input>
-								<input
-									onChange={() => updateFilter()}
 									name='lastname'
 									placeholder='Last name'
+									className={css.inputField}
+								></input>
+							</th>
+							<th>
+								<input
+									onChange={() => updateFilter()}
+									name='firstname'
+									placeholder='First name'
 									className={css.inputField}
 								></input>
 							</th>
@@ -177,7 +178,8 @@ export default function Clients() {
 						<tr>
 							<th>ID</th>
 							<th>Password</th>
-							<th>Name</th>
+							<th>Last name</th>
+							<th>First name</th>
 							<th>Birthday</th>
 							<th>Phone</th>
 							<th>Email</th>
@@ -201,11 +203,42 @@ export default function Clients() {
 							)
 							.map((client, index) => {
 								return (
-									<tr key={index}>
+									<tr key={index} id={`clientRow${client.id}`}>
 										<td>{client.id}</td>
-										<td>{client.password}</td>
 										<td>
-											{client.lastName} {client.firstName}
+											<div
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+													width: '100%',
+													height: '100%',
+												}}
+											>
+												<span>{client.password}</span>
+												<img
+													src={refresh}
+													alt='change password'
+													onClick={e => Client.regeneratePsw(client.id)}
+												/>
+											</div>
+										</td>
+										<td>
+											<input
+												className={css.inputField}
+												type='text'
+												defaultValue={client.lastName}
+												name='lastName'
+												disabled
+											></input>{' '}
+										</td>
+										<td>
+											<input
+												className={css.inputField}
+												type='text'
+												defaultValue={client.firstName}
+												name='firstName'
+												disabled
+											></input>
 										</td>
 										<td>
 											{new Date(client.birthday).toLocaleDateString('ua-Ua', {
@@ -220,12 +253,28 @@ export default function Clients() {
 													60 /
 													60 /
 													24 /
-													365
+													365.25
 											)}{' '}
 											years)
 										</td>
-										<td>{client.phone}</td>
-										<td>{client.mail}</td>
+										<td>
+											<input
+												className={css.inputField}
+												type='phone'
+												name='phone'
+												defaultValue={client.phone}
+												disabled
+											></input>
+										</td>
+										<td>
+											<input
+												className={css.inputField}
+												type='email'
+												name='mail'
+												defaultValue={client.mail}
+												disabled
+											></input>
+										</td>
 										<td>
 											<PDFDownloadLink
 												document={PassportCardDocument({
@@ -260,7 +309,31 @@ export default function Clients() {
 											</PDFDownloadLink>
 										</td>
 										<td>
-											<img src={pencil}></img>
+											<img
+												src={edit}
+												onClick={() => {
+													const elements = Array.from(
+														document.querySelectorAll(
+															`#clientRow${client.id} input`
+														)
+													)
+													elements.map(elem => {
+														elem.disabled = !elem.disabled
+													})
+													if (elements[0].disabled) {
+														let data = {}
+														elements.forEach(elem => {
+															if (elem.value) {
+																data[elem.name] = elem.value
+															}
+														})
+														console.log(data)
+														Client.update(client.id, {
+															data: JSON.stringify(data),
+														})
+													}
+												}}
+											></img>
 										</td>
 										<td>
 											<img
@@ -269,7 +342,7 @@ export default function Clients() {
 													await Client.delete(client.id)
 													update(!isUpdating)
 												}}
-												src={trash}
+												src={can}
 											></img>
 										</td>
 									</tr>

@@ -218,7 +218,13 @@ export class Client {
 			})
 			.then(res => res)
 	}
-
+	static async regeneratePassword(
+		id: number,
+	) {
+		return await fetchData
+			.patch(`/clients/${id}/password`)
+			.then(res => res)
+	}
 	static async delete(id: number) {
 		return await fetchData.delete(`/clients/${id}`).then(res => res)
 	}
