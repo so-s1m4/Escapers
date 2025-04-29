@@ -71,7 +71,7 @@ function Register({ state, comp }) {
 						<div className={css.inputWrapper}>
 							<div className={css.inputTitle}>Last Name *</div>
 							<input
-								type='tel'
+								type='text'
 								required
 								name='lastName'
 								pattern='^[a-zA-Z]{3,64}'
