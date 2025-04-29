@@ -98,7 +98,7 @@ function Register({ state, comp }) {
 						<input
 							type='tel'
 							required
-							pattern='^\+43\d{8,15}$'
+							pattern='^\+\d{8,15}$'
 							title='Austrian phone number, e.g. +43'
 							placeholder='+43123456789'
 							name='phone'
