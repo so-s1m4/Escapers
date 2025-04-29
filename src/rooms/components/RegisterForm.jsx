@@ -39,9 +39,12 @@ function Register({ state, comp }) {
 						}
 					}}
 				>
-					<div className={css.inputWrapper}>
-						<div className={css.inputTitle}>
+					<div className={css.inputWrapper} style={{ display: 'flex', flexWrap: "nowrap", justifyContent: "space-between",alignItems: "center", height: "fit-content" }}>
+						<div className={css.inputTitle} style={{ position: "relative", height: "fit-content", top: 0 }}>
 							Photo <h6>(passport format)</h6>
+						</div>
+						<div className= {css.labelDiv}>
+							<label for='photo'>Hochladen</label>
 						</div>
 						<input
 							type='file'
@@ -49,6 +52,9 @@ function Register({ state, comp }) {
 							name='photo'
 							accept='image/*'
 							capture='user'
+							id='photo'
+							placeholder='Foto'
+							className={css.fileInput}
 							onChange={e => {
 								comp.setState({ photo: e.target.files[0] })
 							}}
