@@ -60,6 +60,7 @@ function Register({ state, comp }) {
 							<input
 								type='text'
 								pattern='^[a-zA-Z]{3,64}'
+								title='Es sollte zu minestestens 3 Buchstaben lang sein'
 								required
 								name='firstName'
 								onChange={e => {
@@ -74,6 +75,7 @@ function Register({ state, comp }) {
 								required
 								name='lastName'
 								pattern='^[a-zA-Z]{3,64}'
+								title='Es sollte zu minestestens 3 Buchstaben lang sein'
 								onChange={e => {
 									comp.setState({ lastName: e.target.value })
 								}}

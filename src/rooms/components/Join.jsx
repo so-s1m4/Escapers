@@ -35,6 +35,7 @@ class Join extends ComponentWithStore {
 	}
 	changeValue(e, index) {
 		if (e.key == 'Backspace') {
+			if (this.state.code[index] == "") this.changeValue(e, Math.max(index - 1, 0))
 			this.state.code[index] = ""
 			this.setState({ code: this.state.code })
 			this.focusNextInput(Math.max(index - 1, 0))
