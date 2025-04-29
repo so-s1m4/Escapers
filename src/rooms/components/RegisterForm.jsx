@@ -39,26 +39,43 @@ function Register({ state, comp }) {
 						}
 					}}
 				>
-					<div className={css.inputWrapper} style={{ display: 'flex', flexWrap: "nowrap", justifyContent: "space-between",alignItems: "center", height: "fit-content" }}>
-						<div className={css.inputTitle} style={{ position: "relative", height: "fit-content", top: 0 }}>
+					<div
+						className={css.inputWrapper}
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							height: 'fit-content',
+							width: '100%',
+							alignItems: "flex-start"
+						}}
+					>
+						<div
+							className={css.inputTitle}
+							style={{ position: 'relative', height: 'fit-content', top: 0 }}
+						>
 							Photo <h6>(passport format)</h6>
 						</div>
-						<div className= {css.labelDiv}>
-							<label for='photo'>Hochladen</label>
+						<div style={{ display: 'flex', flexDirection: 'row', alignItems: "center", gap: '1rem' }}>
+							<div className={css.labelDiv}>
+								<label for='photo'>Hochladen</label>
+							</div>
+							<input
+								type='file'
+								required
+								name='photo'
+								accept='image/*'
+								capture='user'
+								id='photo'
+								placeholder='Foto'
+								className={css.fileInput}
+								onChange={e => {
+									document.getElementById('fileName').innerText =
+										e.target.files[0].name
+									comp.setState({ photo: e.target.files[0] })
+								}}
+							/>
+							<p id='fileName' style={{ maxWidth: '40vw', textOverflow: 'ellipsis', overflow: 'hidden', maxHeight: '2rem', color: 'var(--color-orange)' }}></p>
 						</div>
-						<input
-							type='file'
-							required
-							name='photo'
-							accept='image/*'
-							capture='user'
-							id='photo'
-							placeholder='Foto'
-							className={css.fileInput}
-							onChange={e => {
-								comp.setState({ photo: e.target.files[0] })
-							}}
-						/>
 					</div>
 					<div className={css.inline} style={{ gap: '2rem' }}>
 						<div className={css.inputWrapper}>
