@@ -7,7 +7,7 @@ export default function Router() {
 		<Routes>
 			<Route path='/join' element={<Join />} />
 			<Route path='/join/:id/*' element={<RegisterForm />} />
-			<Route path='/*' element={<Navigate to='/join' />} />
+			<Route path='/*' element={<Navigate to='/rooms/join' />} />
 		</Routes>
 	)
 }
