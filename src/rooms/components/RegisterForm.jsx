@@ -48,7 +48,7 @@ function Register({ state, comp }) {
 							required
 							name='photo'
 							accept='image/*'
-							capture="user"
+							capture='user'
 							onChange={e => {
 								comp.setState({ photo: e.target.files[0] })
 							}}
@@ -59,6 +59,7 @@ function Register({ state, comp }) {
 							<div className={css.inputTitle}>First Name *</div>
 							<input
 								type='text'
+								pattern='^[a-zA-Z]{3,64}'
 								required
 								name='firstName'
 								onChange={e => {
@@ -69,9 +70,10 @@ function Register({ state, comp }) {
 						<div className={css.inputWrapper}>
 							<div className={css.inputTitle}>Last Name *</div>
 							<input
-								type='text'
+								type='tel'
 								required
 								name='lastName'
+								pattern='^[a-zA-Z]{3,64}'
 								onChange={e => {
 									comp.setState({ lastName: e.target.value })
 								}}

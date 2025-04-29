@@ -30,11 +30,6 @@ export default function Clients() {
 				} else file = elem.files[0]
 			})
 		await Client.register(file, data)
-			// .then(res => {
-			// 	elements.forEach(elem => {
-			// 		elem.value = ''
-			// 	})
-			// })
 			.catch(err => throwError(err.response.status, err.response.data.message))
 		update(!isUpdating)
 	}

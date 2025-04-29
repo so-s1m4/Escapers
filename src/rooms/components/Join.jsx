@@ -9,7 +9,7 @@ class Join extends ComponentWithStore {
 	constructor(props) {
 		super(props)
 		this.state = {
-			code: [null, null, null, null],
+			code: ["", "", "", ""],
 		}
 		this.checkRoomCode.bind(this)
 	}
@@ -23,40 +23,36 @@ class Join extends ComponentWithStore {
 
 	async checkRoomCode() {
 		const roomCode = this.state.code.join('')
-		await Room.isRoomOpen(roomCode).then(res => {
-			console.log(res.success)
-			if (res.success) {
-				localStorage.setItem('roomCode', roomCode)
-				this.props.nav('/rooms/join/' + res.id)
-			}
-		}).catch(err=>{
-			if (err.status == 404) {
-				this.setState({ code: [null, null, null, null] })
-				this.focusNextInput(0)
-			}
-		})
-		
-
+		await Room.isRoomOpen(roomCode)
+			.then(res => {
+				console.log(res.success)
+				if (res.success) {
+					localStorage.setItem('roomCode', roomCode)
+					this.props.nav('/rooms/join/' + res.id)
+				}
+			})
+			.catch(err => {})
 	}
 	changeValue(e, index) {
 		if (e.key == 'Backspace') {
-			this.state.code[index] = null
+			this.state.code[index] = ""
 			this.setState({ code: this.state.code })
-			return
+			this.focusNextInput(Math.max(index - 1, 0))
+		} else {
+			if (e.key == 0) {
+				this.state.code[index] = 0
+				this.setState({ code: this.state.code })
+				this.focusNextInput(Math.min(index + 1, 3))
+			} else {
+				if (e.key * 1 > 0 && e.key * 1 < 10) {
+					this.state.code[index] = parseInt(e.key)
+					this.state.code[index] = parseInt('' + this.state.code[index])
+					this.setState({ code: this.state.code })
+					this.focusNextInput(Math.min(index + 1, 3))
+				}
+			}
 		}
-		if (e.key * 1 > 0 && e.key * 1 < 10) {
-			this.state.code[index] = parseInt(e.key)
-			this.state.code[index] = parseInt(""+this.state.code[index])
-			this.setState({ code: this.state.code })
-			this.focusNextInput(index + 1)
-		}
-		if (e.key == 0) {
-			this.state.code[index] = 0
-			this.setState({ code: this.state.code })
-			this.focusNextInput(index + 1)
-		}
-
-		if (!this.state.code.includes(null) && index == 3) {
+		if (!this.state.code.includes("")) {
 			this.checkRoomCode()
 		}
 	}
