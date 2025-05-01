@@ -29,8 +29,9 @@ export default function Clients() {
 					}
 				} else file = elem.files[0]
 			})
-		await Client.register(file, data)
-			.catch(err => throwError(err.response.status, err.response.data.message))
+		await Client.register(file, data).catch(err =>
+			throwError(err.response.status, err.response.data.message)
+		)
 		update(!isUpdating)
 	}
 
@@ -207,14 +208,17 @@ export default function Clients() {
 													justifyContent: 'space-between',
 													width: '100%',
 													height: '100%',
+
 												}}
 											>
 												<span>{client.password}</span>
-												<img
+												<input
+													onClick={e => Client.regeneratePsw(client.id)}
+													type='image'
 													src={refresh}
 													alt='change password'
-													onClick={e => Client.regeneratePsw(client.id)}
-												/>
+													disabled
+												></input>
 											</div>
 										</td>
 										<td>

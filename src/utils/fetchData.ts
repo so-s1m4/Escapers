@@ -1,7 +1,7 @@
 // src/lib/axios.js
 import axios from 'axios'
 
-const IP = 'projects.vps.webdock.cloud'
+const IP = 'escapers.m0sk1tu4.codes'
 export const BASE_URL = `https://${IP}`
 
 const api = axios.create({

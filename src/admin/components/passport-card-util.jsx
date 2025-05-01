@@ -160,14 +160,14 @@ export const FormularDocument = data => {
 						}}
 					>
 						Datum "
-						{new Date(data.createdAt).toLocaleDateString('ua-UA', {
+						{new Date(data.createdAt).toLocaleDateString('de-AT', {
 							day: 'numeric',
 						})}
 						"{' '}
-						{new Date(data.createdAt).toLocaleDateString('ua-UA', {
+						{new Date(data.createdAt).toLocaleDateString('de-AT', {
 							month: 'long',
 						})}{' '}
-						{new Date(data.createdAt).toLocaleDateString('ua-UA', {
+						{new Date(data.createdAt).toLocaleDateString('de-AT', {
 							year: 'numeric',
 						})}{' '}
 					</Text>

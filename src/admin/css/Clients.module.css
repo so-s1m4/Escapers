@@ -82,12 +82,6 @@
 
 	font-size: 1rem;
 }
-.table td img {
-	width: 25px;
-	height: 25px;
-	object-fit: cover;
-	cursor: pointer;
-}
 
 .trash:hover {
 	filter: brightness(0) saturate(100%) invert(34%) sepia(97%) saturate(6340%)
@@ -185,4 +179,19 @@
 
 	width: 48.5%;
 	font-size: 1.5rem;
+}
+
+.table td input[type="image"], .table td img {
+	border: 0;
+	width: 25px;
+	height: 25px;
+	object-fit: fill;
+	cursor: pointer;
+	padding: 0;
+	margin: 0;
+}
+.table td input[type="image"]:disabled {
+	cursor: not-allowed;
+	display: none;
+
 }

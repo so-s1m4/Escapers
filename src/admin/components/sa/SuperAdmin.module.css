@@ -20,6 +20,7 @@
 }
 .container select optgroup {
 	margin-bottom: 1rem;
+	background: transparent;
 }
 
 

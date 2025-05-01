@@ -32,7 +32,7 @@ function Register({ state, comp }) {
 						if (alt < 10) {
 							throwError(
 								406,
-								'Sie können nicht an einem Spiel teilnehmen, da Sie unter 10 Jahre alt sind'
+								'Sie dürfen nicht an einem Spiel teilnehmen, da Sie unter 10 Jahre alt sind'
 							)
 						} else {
 							comp.setState({ step: 2 })
@@ -46,7 +46,7 @@ function Register({ state, comp }) {
 							flexDirection: 'column',
 							height: 'fit-content',
 							width: '100%',
-							alignItems: "flex-start"
+							alignItems: 'flex-start',
 						}}
 					>
 						<div
@@ -55,7 +55,14 @@ function Register({ state, comp }) {
 						>
 							Photo <h6>(passport format)</h6>
 						</div>
-						<div style={{ display: 'flex', flexDirection: 'row', alignItems: "center", gap: '1rem' }}>
+						<div
+							style={{
+								display: 'flex',
+								flexDirection: 'row',
+								alignItems: 'center',
+								gap: '1rem',
+							}}
+						>
 							<div className={css.labelDiv}>
 								<label for='photo'>Hochladen</label>
 							</div>
@@ -74,7 +81,16 @@ function Register({ state, comp }) {
 									comp.setState({ photo: e.target.files[0] })
 								}}
 							/>
-							<p id='fileName' style={{ maxWidth: '40vw', textOverflow: 'ellipsis', overflow: 'hidden', maxHeight: '2rem', color: 'var(--color-orange)' }}></p>
+							<p
+								id='fileName'
+								style={{
+									maxWidth: '40vw',
+									textOverflow: 'ellipsis',
+									overflow: 'hidden',
+									maxHeight: '2rem',
+									color: 'var(--color-orange)',
+								}}
+							></p>
 						</div>
 					</div>
 					<div className={css.inline} style={{ gap: '2rem' }}>
@@ -150,6 +166,7 @@ function Register({ state, comp }) {
 				<h4>
 					Haben Sie bereits einen Pass?{' '}
 					<h10
+						style={{ cursor: 'pointer' }}
 						onClick={() => {
 							comp.setState({ step: 1 })
 						}}
@@ -214,6 +231,7 @@ function Login({ state, comp }) {
 				<h4>
 					Haben Sie noch keinen Pass?{' '}
 					<h10
+						style={{ cursor: 'pointer' }}
 						onClick={() => {
 							comp.setState({ step: 0 })
 						}}
