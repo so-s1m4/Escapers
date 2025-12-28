@@ -1,0 +1,42 @@
+name: Build Frontend and Publish to Sites
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Checkout Sites repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.SITES_REPO }}
+          token: ${{ secrets.SITES_PUSH_TOKEN }}
+          path: Sites
+
+      - name: Copy build to Sites
+        run: |
+          rm -rf Sites/escapers/frontend/*
+          mkdir -p Sites/escapers/frontend
+          cp -r build/* Sites/escapers/frontend/
+
+      - name: Commit & push to Sites
+        run: |
+          cd Sites
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add escapers/frontend/
+          git diff --cached --quiet && exit 0
+          git commit -m "Update escapers frontend from $GITHUB_REPOSITORY@$GITHUB_SHA"
+          git push
