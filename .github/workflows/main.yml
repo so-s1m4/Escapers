@@ -17,6 +17,8 @@ jobs:
 
       - run: npm i
       - run: npm run build
+        env:
+          CI: "false"
 
       - name: Checkout Sites repo
         uses: actions/checkout@v4
